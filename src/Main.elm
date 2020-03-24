@@ -232,6 +232,8 @@ view model =
             h1
                 [ style "position" "absolute"
                 , style "left" "50%"
+                , style "color" "rgb(250, 240, 198)"
+                , style "font-size" "4em"
                 , style "top" "50%"
                 , style "transform" "translate(-50%, -50%)"
                 ]
