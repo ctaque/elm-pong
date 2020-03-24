@@ -1,8 +1,9 @@
 module Main exposing (main)
 
 import Browser
-import Html exposing (Html, div, h1, text)
+import Html exposing (Html, button, div, h1, text)
 import Html.Attributes exposing (style)
+import Html.Events exposing (onClick)
 import Keyboard exposing (RawKey)
 import Time
 
@@ -104,11 +105,6 @@ init flags =
 -- UPDATE
 
 
-type Msg
-    = Move Time.Posix
-    | KeyDown RawKey
-
-
 setXPosition : Int -> WindowSize -> Int -> ( Int, Int )
 setXPosition x windowSize direction =
     if x < circleRadius then
@@ -155,6 +151,10 @@ barOffsetFromRight : Int -> WindowSize -> Int -> Int
 barOffsetFromRight nextPosition windowSize barWidth =
     Basics.min nextPosition (windowSize.width - barWidth)
 
+type Msg
+    = Move Time.Posix
+    | KeyDown RawKey
+    | Restart
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
@@ -166,6 +166,13 @@ update msg model =
             setYPosition model.coordinates model.barXOffset model.barWidth model.windowSize model.yDirection
     in
     case msg of
+        Restart ->
+            ({model 
+                | gameLost = False
+                , yDirection = -1
+                , coordinates = (Basics.floor (Basics.toFloat model.windowSize.width / 2) , Basics.floor (Basics.toFloat model.windowSize.height / 2))
+                }
+                , Cmd.none)
         Move _ ->
             ( { model
                 | coordinates = ( Tuple.first x, yResult.y )
@@ -229,15 +236,18 @@ view model =
         , style "background-color" "rgb(40, 40, 40)"
         ]
         [ if model.gameLost == True then
-            h1
-                [ style "position" "absolute"
-                , style "left" "50%"
-                , style "color" "rgb(250, 240, 198)"
-                , style "font-size" "4em"
-                , style "top" "50%"
+            div
+                [ style "display" "flex"
+                , style "flex-direction" "column"
+                , style "position" "absolute"
                 , style "transform" "translate(-50%, -50%)"
+                , style "top" "50%"
+                , style "left" "50%"
                 ]
-                [ text "Perdu !" ]
+                [ h1 [][ text "Perdu !" ]
+                , button
+                    [onClick Restart][ text "Rejouer" ]
+                ]
 
           else
             div
