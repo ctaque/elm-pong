@@ -3,12 +3,12 @@ module Main exposing (main)
 import Browser
 import Html exposing (Html, div)
 import Html.Attributes exposing (style)
+import Keyboard exposing (RawKey)
 import Time
 
 
 
 -- MAIN
-
 
 main =
     Browser.element { init = init, update = update, view = view, subscriptions = subscriptions }
@@ -17,12 +17,17 @@ main =
 
 -- MODEL
 
+
 pxByMove : Int
 pxByMove =
     3
+barMoveIncrement: Int
+barMoveIncrement = 40
+
 playerBarHeight : Int
-playerBarHeight = 
+playerBarHeight =
     150
+
 
 type alias WindowSize =
     { width : Int
@@ -53,8 +58,8 @@ init flags =
       , y = Basics.floor (toFloat flags.windowHeight / 2)
       , xDirection = 1
       , yDirection = 1
-      , playerLeftBarY = Basics.floor (( toFloat flags.windowHeight / 2) - (toFloat playerBarHeight / 2))
-      , playerRightBarY = Basics.floor  ((toFloat flags.windowHeight / 2) - (toFloat playerBarHeight / 2))
+      , playerLeftBarY = Basics.floor ((toFloat flags.windowHeight / 2) - (toFloat playerBarHeight / 2))
+      , playerRightBarY = Basics.floor ((toFloat flags.windowHeight / 2) - (toFloat playerBarHeight / 2))
       , windowSize =
             { width = flags.windowWidth
             , height = flags.windowHeight
@@ -70,7 +75,7 @@ init flags =
 
 type Msg
     = Move Time.Posix
-
+    | KeyDown RawKey
 
 
 setXPosition : Int -> WindowSize -> Int -> ( Int, Int )
@@ -123,6 +128,37 @@ update msg model =
             , Cmd.none
             )
 
+        KeyDown key ->
+            let
+                keyParsed =
+                    Keyboard.rawValue key
+            in
+            case keyParsed of
+                "s" ->
+                    ({ model
+                        | playerLeftBarY = model.playerLeftBarY + barMoveIncrement
+                    }
+                    , Cmd.none)
+
+                "z" ->
+                    ({ model
+                        | playerLeftBarY = model.playerLeftBarY - barMoveIncrement
+                    }
+                    , Cmd.none)
+                "ArrowDown" ->
+                    ({ model
+                        | playerRightBarY = model.playerRightBarY + barMoveIncrement
+                    }
+                    , Cmd.none)
+
+                "ArrowUp" ->
+                    ({ model
+                        | playerRightBarY = model.playerRightBarY - barMoveIncrement
+                    }
+                    , Cmd.none)
+                _ ->
+                    (model, Cmd.none)
+
 
 
 -- SUBSCRIPTIONS
@@ -130,7 +166,10 @@ update msg model =
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    Time.every 1 Move
+    Sub.batch
+        [ Time.every 1 Move
+        , Keyboard.downs KeyDown
+        ]
 
 
 
@@ -139,15 +178,18 @@ subscriptions _ =
 
 view : Model -> Html Msg
 view model =
-    div [ style "position" "relative"
-    ][
-        div [ style "position" "absolute"
+    div
+        [ style "position" "relative"
+        ]
+        [ div
+            [ style "position" "absolute"
             , style "top" (String.fromInt model.playerLeftBarY ++ "px")
             , style "left" "10px"
             , style "background-color" "black"
             , style "width" "20px"
             , style "height" (String.fromInt playerBarHeight ++ "px")
-        ] []
+            ]
+            []
         , div
             [ style "position" "absolute"
             , style "top" (String.fromInt (.y model) ++ "px")
@@ -156,13 +198,15 @@ view model =
             , style "border-radius" "100%"
             , style "width" "50px"
             , style "height" "50px"
-            ] []
-        , div [ style "position" "absolute"
+            ]
+            []
+        , div
+            [ style "position" "absolute"
             , style "top" (String.fromInt model.playerRightBarY ++ "px")
             , style "right" "10px"
             , style "background-color" "black"
             , style "width" "20px"
             , style "height" (String.fromInt playerBarHeight ++ "px")
-        ] []
-    ]
-        
+            ]
+            []
+        ]
