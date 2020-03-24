@@ -1,7 +1,7 @@
 module Main exposing (main)
 
 import Browser
-import Html exposing (Html, div)
+import Html exposing (Html, div, h1, text)
 import Html.Attributes exposing (style)
 import Keyboard exposing (RawKey)
 import Time
@@ -39,10 +39,16 @@ barHeight =
     20
 
 
+circleRadius : Int
+circleRadius =
+    50
+
+
 type alias WindowSize =
     { width : Int
     , height : Int
     }
+
 
 type alias SetYPositionReturnType =
     { y : Int
@@ -50,8 +56,13 @@ type alias SetYPositionReturnType =
     , gameLost : Bool
     }
 
+
+type alias Coordinates =
+    ( Int, Int )
+
+
 type alias Model =
-    { coordinates : (Int, Int)
+    { coordinates : Coordinates
     , xDirection : Int
     , yDirection : Int
     , windowSize : WindowSize
@@ -74,9 +85,9 @@ getBarWidth flags =
 
 init : Flags -> ( Model, Cmd Msg )
 init flags =
-    ( { coordinates = (Basics.floor (toFloat flags.windowWidth / 2), Basics.floor (toFloat flags.windowHeight / 2))
+    ( { coordinates = ( Basics.floor (toFloat flags.windowWidth / 2), Basics.floor (toFloat flags.windowHeight / 2) )
       , xDirection = 1
-      , yDirection = 1
+      , yDirection = -1
       , barXOffset = Basics.floor ((toFloat flags.windowWidth / 2) - (Basics.toFloat (getBarWidth flags) / 2))
       , gameLost = False
       , barWidth = getBarWidth flags
@@ -100,11 +111,11 @@ type Msg
 
 setXPosition : Int -> WindowSize -> Int -> ( Int, Int )
 setXPosition x windowSize direction =
-    if x <= 0 then
-        ( pxByMove, 1 )
+    if x < circleRadius then
+        ( x + pxByMove, 1 )
 
-    else if x >= windowSize.width then
-        ( windowSize.width - pxByMove, -1 )
+    else if x >= windowSize.width - circleRadius then
+        ( x - pxByMove, -1 )
 
     else if direction == 1 then
         ( x + pxByMove, 1 )
@@ -113,19 +124,26 @@ setXPosition x windowSize direction =
         ( x - pxByMove, -1 )
 
 
-setYPosition : Int -> WindowSize -> Int -> SetYPositionReturnType
-setYPosition y windowSize direction =
-    if y <= 0 then
-        { y = pxByMove, direction = 1, gameLost = False}
+setYPosition : Coordinates -> Int -> Int -> WindowSize -> Int -> SetYPositionReturnType
+setYPosition coordinates barXOffset barWidth windowSize direction =
+    if Tuple.second coordinates <= circleRadius then
+        { y = Tuple.second coordinates + pxByMove, direction = 1, gameLost = False }
 
-    else if y >= windowSize.height then
-        { y = windowSize.height - pxByMove, direction = -1, gameLost = True}
+    else if Tuple.second coordinates >= windowSize.height - circleRadius then
+        { y = Tuple.second coordinates - pxByMove, direction = -1, gameLost = True }
+
+    else if direction == 1 && Tuple.second coordinates >= (windowSize.height - barHeight - barYOffset - circleRadius) then
+        if Tuple.first coordinates >= barXOffset && Tuple.first coordinates <= barXOffset + barWidth then
+            { y = Tuple.second coordinates - pxByMove, direction = -1, gameLost = False }
+
+        else
+            { y = Tuple.second coordinates + pxByMove, direction = 1, gameLost = False }
 
     else if direction == 1 then
-        {  y = y + pxByMove, direction =  1, gameLost = False}
+        { y = Tuple.second coordinates + pxByMove, direction = 1, gameLost = False }
 
     else
-        { y = y - pxByMove, direction = -1, gameLost = False }
+        { y = Tuple.second coordinates - pxByMove, direction = -1, gameLost = False }
 
 
 barOffsetFromLeft : Int -> Int
@@ -145,12 +163,12 @@ update msg model =
             setXPosition (Tuple.first model.coordinates) model.windowSize model.xDirection
 
         yResult =
-            setYPosition (Tuple.second model.coordinates) model.windowSize model.yDirection
+            setYPosition model.coordinates model.barXOffset model.barWidth model.windowSize model.yDirection
     in
     case msg of
         Move _ ->
             ( { model
-            | coordinates = (Tuple.first x, yResult.y)
+                | coordinates = ( Tuple.first x, yResult.y )
                 , xDirection = Tuple.second x
                 , yDirection = yResult.direction
                 , gameLost = yResult.gameLost
@@ -187,11 +205,15 @@ update msg model =
 
 
 subscriptions : Model -> Sub Msg
-subscriptions _ =
-    Sub.batch
-        [ Time.every 1 Move
-        , Keyboard.downs KeyDown
-        ]
+subscriptions model =
+    if model.gameLost then
+        Sub.batch [ Keyboard.downs KeyDown ]
+
+    else
+        Sub.batch
+            [ Time.every 1 Move
+            , Keyboard.downs KeyDown
+            ]
 
 
 
@@ -204,24 +226,38 @@ view model =
         [ style "position" "relative"
         , style "width" "100vw"
         , style "height" "100vh"
+        , style "background-color" "rgb(40, 40, 40)"
         ]
-        [ div
-            [ style "position" "absolute"
-            , style "bottom" (String.fromInt barYOffset ++ "px")
-            , style "transform" ("translateX(" ++ (String.fromInt model.barXOffset ++ "px)"))
-            , style "background-color" "black"
-            , style "height" (String.fromInt barHeight ++ "px")
-            , style "width" (String.fromInt model.barWidth ++ "px")
-            ]
-            []
-        , div
-            [ style "position" "absolute"
-            , style "top" (String.fromInt (Tuple.second model.coordinates) ++ "px")
-            , style "left" (String.fromInt (Tuple.first model.coordinates) ++ "px")
-            , style "background-color" "blue"
-            , style "border-radius" "100%"
-            , style "width" "50px"
-            , style "height" "50px"
-            ]
-            []
+        [ if model.gameLost == True then
+            h1
+                [ style "position" "absolute"
+                , style "left" "50%"
+                , style "top" "50%"
+                , style "transform" "translate(-50%, -50%)"
+                ]
+                [ text "Perdu !" ]
+
+          else
+            div
+                []
+                [ div
+                    [ style "position" "absolute"
+                    , style "bottom" (String.fromInt barYOffset ++ "px")
+                    , style "transform" ("translateX(" ++ (String.fromInt model.barXOffset ++ "px)"))
+                    , style "background-color" "rgb(250, 240, 198)"
+                    , style "height" (String.fromInt barHeight ++ "px")
+                    , style "width" (String.fromInt model.barWidth ++ "px")
+                    ]
+                    []
+                , div
+                    [ style "position" "absolute"
+                    , style "transform" ("translateY(" ++ String.fromInt (Tuple.second model.coordinates - circleRadius) ++ "px) translateX(" ++ String.fromInt (Tuple.first model.coordinates - circleRadius) ++ "px)")
+                    , style "transform-origin" "center"
+                    , style "background-color" "rgb(251, 73, 52)"
+                    , style "border-radius" "100%"
+                    , style "width" (String.fromInt (circleRadius * 2) ++ "px")
+                    , style "height" (String.fromInt (circleRadius * 2) ++ "px")
+                    ]
+                    []
+                ]
         ]
