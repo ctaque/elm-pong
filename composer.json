@@ -1,0 +1,10 @@
+{
+    "name": "ctaque/pong",
+    "authors": [
+        {
+            "name": "Cyprien Taque",
+            "email": "cyprien.taque@gmail.com"
+        }
+    ],
+    "require": {}
+}
