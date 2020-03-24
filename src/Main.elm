@@ -24,11 +24,6 @@ pxByMove =
 barMoveIncrement: Int
 barMoveIncrement = 40
 
-playerBarHeight : Int
-playerBarHeight =
-    150
-
-
 type alias WindowSize =
     { width : Int
     , height : Int
@@ -41,8 +36,8 @@ type alias Model =
     , xDirection : Int
     , yDirection : Int
     , windowSize : WindowSize
-    , playerLeftBarY : Int
-    , playerRightBarY : Int
+    , barWidth : Int 
+    , barXOffset : Int
     }
 
 
@@ -51,15 +46,17 @@ type alias Flags =
     , windowWidth : Int
     }
 
-
+getBarWidth : Flags -> Int
+getBarWidth flags = 
+    Basics.floor (Basics.min (Basics.toFloat flags.windowWidth / 2) 300)
 init : Flags -> ( Model, Cmd Msg )
 init flags =
     ( { x = Basics.floor (toFloat flags.windowWidth / 2)
       , y = Basics.floor (toFloat flags.windowHeight / 2)
       , xDirection = 1
       , yDirection = 1
-      , playerLeftBarY = Basics.floor ((toFloat flags.windowHeight / 2) - (toFloat playerBarHeight / 2))
-      , playerRightBarY = Basics.floor ((toFloat flags.windowHeight / 2) - (toFloat playerBarHeight / 2))
+      , barXOffset = Basics.floor ((toFloat flags.windowWidth / 2) - ( Basics.toFloat (getBarWidth flags) / 2))
+      , barWidth = getBarWidth flags
       , windowSize =
             { width = flags.windowWidth
             , height = flags.windowHeight
@@ -107,7 +104,12 @@ setYPosition y windowSize direction =
     else
         ( y - pxByMove, -1 )
 
-
+barOffsetFromLeft : Int -> Int
+barOffsetFromLeft currentPosition = 
+    Basics.max currentPosition 0
+barOffsetFromRight: Int -> WindowSize -> Int -> Int
+barOffsetFromRight nextPosition windowSize barWidth =
+    Basics.min nextPosition (windowSize.width - barWidth)
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     let
@@ -134,26 +136,15 @@ update msg model =
                     Keyboard.rawValue key
             in
             case keyParsed of
-                "s" ->
+                "ArrowRight" ->
                     ({ model
-                        | playerLeftBarY = model.playerLeftBarY + barMoveIncrement
+                        |  barXOffset = barOffsetFromLeft ( barOffsetFromRight (model.barXOffset + barMoveIncrement) model.windowSize model.barWidth)
                     }
                     , Cmd.none)
 
-                "z" ->
+                "ArrowLeft" ->
                     ({ model
-                        | playerLeftBarY = model.playerLeftBarY - barMoveIncrement
-                    }
-                    , Cmd.none)
-                "ArrowDown" ->
-                    ({ model
-                        | playerRightBarY = model.playerRightBarY + barMoveIncrement
-                    }
-                    , Cmd.none)
-
-                "ArrowUp" ->
-                    ({ model
-                        | playerRightBarY = model.playerRightBarY - barMoveIncrement
+                        | barXOffset = barOffsetFromLeft ( barOffsetFromRight (model.barXOffset - barMoveIncrement) model.windowSize model.barWidth)
                     }
                     , Cmd.none)
                 _ ->
@@ -180,14 +171,16 @@ view : Model -> Html Msg
 view model =
     div
         [ style "position" "relative"
+        , style "width" "100vw"
+        , style "height" "100vh"
         ]
         [ div
             [ style "position" "absolute"
-            , style "top" (String.fromInt model.playerLeftBarY ++ "px")
-            , style "left" "10px"
+            , style "bottom" "10px"
+            , style "transform" ("translateX(" ++ (String.fromInt model.barXOffset ++ "px)"))
             , style "background-color" "black"
-            , style "width" "20px"
-            , style "height" (String.fromInt playerBarHeight ++ "px")
+            , style "height" "20px"
+            , style "width" (String.fromInt model.barWidth ++ "px")
             ]
             []
         , div
@@ -198,15 +191,6 @@ view model =
             , style "border-radius" "100%"
             , style "width" "50px"
             , style "height" "50px"
-            ]
-            []
-        , div
-            [ style "position" "absolute"
-            , style "top" (String.fromInt model.playerRightBarY ++ "px")
-            , style "right" "10px"
-            , style "background-color" "black"
-            , style "width" "20px"
-            , style "height" (String.fromInt playerBarHeight ++ "px")
             ]
             []
         ]
