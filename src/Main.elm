@@ -70,6 +70,7 @@ type alias Model =
     , barWidth : Int
     , barXOffset : Int
     , gameLost : Bool
+    , gameStarted : Bool
     }
 
 
@@ -91,6 +92,7 @@ init flags =
       , yDirection = -1
       , barXOffset = Basics.floor ((toFloat flags.windowWidth / 2) - (Basics.toFloat (getBarWidth flags) / 2))
       , gameLost = False
+      , gameStarted = False
       , barWidth = getBarWidth flags
       , windowSize =
             { width = flags.windowWidth
@@ -151,10 +153,13 @@ barOffsetFromRight : Int -> WindowSize -> Int -> Int
 barOffsetFromRight nextPosition windowSize barWidth =
     Basics.min nextPosition (windowSize.width - barWidth)
 
+
 type Msg
     = Move Time.Posix
     | KeyDown RawKey
     | Restart
+    | Start
+
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
@@ -167,12 +172,21 @@ update msg model =
     in
     case msg of
         Restart ->
-            ({model 
+            ( { model
                 | gameLost = False
                 , yDirection = -1
-                , coordinates = (Basics.floor (Basics.toFloat model.windowSize.width / 2) , Basics.floor (Basics.toFloat model.windowSize.height / 2))
-                }
-                , Cmd.none)
+                , coordinates = ( Basics.floor (Basics.toFloat model.windowSize.width / 2), Basics.floor (Basics.toFloat model.windowSize.height / 2) )
+              }
+            , Cmd.none
+            )
+
+        Start ->
+            ( { model
+                | gameStarted = True
+              }
+            , Cmd.none
+            )
+
         Move _ ->
             ( { model
                 | coordinates = ( Tuple.first x, yResult.y )
@@ -213,7 +227,7 @@ update msg model =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    if model.gameLost then
+    if model.gameLost || model.gameStarted == False then
         Sub.batch [ Keyboard.downs KeyDown ]
 
     else
@@ -235,7 +249,7 @@ view model =
         , style "height" "100vh"
         , style "background-color" "rgb(40, 40, 40)"
         ]
-        [ if model.gameLost == True then
+        [ if model.gameStarted == False then
             div
                 [ style "display" "flex"
                 , style "flex-direction" "column"
@@ -244,9 +258,25 @@ view model =
                 , style "top" "50%"
                 , style "left" "50%"
                 ]
-                [ h1 [][ text "Perdu !" ]
+                [ h1 [] [ text "Le jeu du Pong" ]
                 , button
-                    [onClick Restart][ text "Rejouer" ]
+                    [ onClick Start ]
+                    [ text "Jouer" ]
+                ]
+
+          else if model.gameLost == True then
+            div
+                [ style "display" "flex"
+                , style "flex-direction" "column"
+                , style "position" "absolute"
+                , style "transform" "translate(-50%, -50%)"
+                , style "top" "50%"
+                , style "left" "50%"
+                ]
+                [ h1 [] [ text "Perdu !" ]
+                , button
+                    [ onClick Restart ]
+                    [ text "Rejouer" ]
                 ]
 
           else
