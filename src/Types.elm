@@ -8,6 +8,7 @@ type Msg
     | KeyDown RawKey
     | Restart
     | Start
+    | LevelUp Time.Posix
 
 type alias WindowSize =
     { width : Int
@@ -35,6 +36,7 @@ type alias Model =
     , barXOffset : Int
     , gameLost : Bool
     , gameStarted : Bool
+    , level : Int
     }
 
 

@@ -14,5 +14,6 @@ subscriptions model =
     else
         Sub.batch
             [ Time.every 1 Move
+            , Time.every 10000 LevelUp
             , Keyboard.downs KeyDown
             ]

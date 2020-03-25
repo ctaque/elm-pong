@@ -1,9 +1,11 @@
 module View exposing (app)
-import Types exposing (Model, Msg (..))
-import Constants exposing (barYOffset, barHeight, circleRadius)
-import Html exposing (Html, button, div, h1, text)
+
+import Constants exposing (barHeight, barYOffset, circleRadius)
+import Html exposing (Html, button, div, h1, span, text)
 import Html.Attributes exposing (style)
 import Html.Events exposing (onClick)
+import Types exposing (Model, Msg(..))
+
 
 app : Model -> Html Msg
 app model =
@@ -46,10 +48,21 @@ app model =
           else
             div
                 []
-                [ div
+                [ span
+                    [ style "position" "absolute"
+                    , style "top" "50vh"
+                    , style "left" "50vw"
+                    , style "transform" "translate(-50%,-50%)"
+                    , style "color" "rgb(250, 240, 198)"
+                    , style "font-size" "5em"
+                    , style "opacity" "0.3"
+                    ]
+                    [ text ("Niveau " ++ String.fromInt model.level) ]
+                , div
                     [ style "position" "absolute"
                     , style "bottom" (String.fromInt barYOffset ++ "px")
                     , style "transform" ("translateX(" ++ (String.fromInt model.barXOffset ++ "px)"))
+                    , style "border-radius" "4px"
                     , style "background-color" "rgb(250, 240, 198)"
                     , style "height" (String.fromInt barHeight ++ "px")
                     , style "width" (String.fromInt model.barWidth ++ "px")

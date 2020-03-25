@@ -1,7 +1,7 @@
 module Functions exposing (..)
 import Types exposing (Flags, WindowSize, Model, Msg, Coordinates, SetYPositionReturnType)
 import Constants exposing (circleRadius, pxByMove, barHeight, barYOffset)
-
+import Complex exposing (real, fromReal, exp)
 
 getBarWidth : Flags -> Int
 getBarWidth flags =
@@ -16,6 +16,7 @@ init flags =
       , barXOffset = Basics.floor ((toFloat flags.windowWidth / 2) - (Basics.toFloat (getBarWidth flags) / 2))
       , gameLost = False
       , gameStarted = False
+      , level = 1
       , barWidth = getBarWidth flags
       , windowSize =
             { width = flags.windowWidth
@@ -30,10 +31,14 @@ init flags =
 -- UPDATE
 
 
-setXPosition : Int -> WindowSize -> Int -> ( Int, Int )
-setXPosition x windowSize direction =
+getXPosition : Int -> WindowSize -> Int -> Int -> ( Int, Int )
+getXPosition x windowSize direction level =
+    let
+        levelComplex = fromReal (Basics.toFloat level)
+        exponentialLevel = exp levelComplex
+    in
     if x < circleRadius then
-        ( x + pxByMove, 1 )
+        ( x + pxByMove + Basics.floor (real exponentialLevel / 2), 1 )
 
     else if x >= windowSize.width - circleRadius then
         ( x - pxByMove, -1 )
@@ -45,8 +50,8 @@ setXPosition x windowSize direction =
         ( x - pxByMove, -1 )
 
 
-setYPosition : Coordinates -> Int -> Int -> WindowSize -> Int -> SetYPositionReturnType
-setYPosition coordinates barXOffset barWidth windowSize direction =
+getYPosition : Coordinates -> Int -> Int -> WindowSize -> Int -> Int -> SetYPositionReturnType
+getYPosition coordinates barXOffset barWidth windowSize direction level =
     if Tuple.second coordinates <= circleRadius then
         { y = Tuple.second coordinates + pxByMove, direction = 1, gameLost = False }
 

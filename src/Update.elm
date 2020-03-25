@@ -1,23 +1,25 @@
-
 module Update exposing (update)
-import Types exposing (Msg (..), Model)
-import Functions exposing (setXPosition, setYPosition, barOffsetFromLeft, barOffsetFromRight)
+
 import Constants exposing (barMoveIncrement)
+import Functions exposing (barOffsetFromLeft, barOffsetFromRight, getXPosition, getYPosition)
 import Keyboard exposing (rawValue)
+import Types exposing (Model, Msg(..))
+
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     let
-        x =
-            setXPosition (Tuple.first model.coordinates) model.windowSize model.xDirection
+        xPosition =
+            getXPosition (Tuple.first model.coordinates) model.windowSize model.xDirection model.level
 
-        yResult =
-            setYPosition model.coordinates model.barXOffset model.barWidth model.windowSize model.yDirection
+        yPosition =
+            getYPosition model.coordinates model.barXOffset model.barWidth model.windowSize model.yDirection model.level
     in
     case msg of
         Restart ->
             ( { model
                 | gameLost = False
+                , level = 1
                 , yDirection = -1
                 , coordinates = ( Basics.floor (Basics.toFloat model.windowSize.width / 2), Basics.floor (Basics.toFloat model.windowSize.height / 2) )
               }
@@ -33,13 +35,18 @@ update msg model =
 
         Move _ ->
             ( { model
-                | coordinates = ( Tuple.first x, yResult.y )
-                , xDirection = Tuple.second x
-                , yDirection = yResult.direction
-                , gameLost = yResult.gameLost
+                | coordinates = ( Tuple.first xPosition, yPosition.y )
+                , xDirection = Tuple.second xPosition
+                , yDirection = yPosition.direction
+                , gameLost = yPosition.gameLost
               }
             , Cmd.none
             )
+
+        LevelUp _ ->
+            ({ model
+                | level = model.level + 1
+            }, Cmd.none)
 
         KeyDown key ->
             let
@@ -63,4 +70,3 @@ update msg model =
 
                 _ ->
                     ( model, Cmd.none )
-
