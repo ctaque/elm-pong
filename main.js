@@ -4877,6 +4877,10 @@ var $elm$core$Result$isOk = function (result) {
 	}
 };
 var $elm$json$Json$Decode$andThen = _Json_andThen;
+var $author$project$Types$Restart = {$: 'Restart'};
+var $author$project$Types$Start = {$: 'Start'};
+var $author$project$Constants$barHeight = 20;
+var $author$project$Constants$barYOffset = 10;
 var $elm$json$Json$Decode$map = _Json_map1;
 var $elm$json$Json$Decode$map2 = _Json_map2;
 var $elm$json$Json$Decode$succeed = _Json_succeed;
@@ -4891,6 +4895,180 @@ var $elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
 		default:
 			return 3;
 	}
+};
+var $elm$html$Html$button = _VirtualDom_node('button');
+var $author$project$Constants$circleRadius = 50;
+var $elm$html$Html$div = _VirtualDom_node('div');
+var $elm$html$Html$h1 = _VirtualDom_node('h1');
+var $elm$virtual_dom$VirtualDom$Normal = function (a) {
+	return {$: 'Normal', a: a};
+};
+var $elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
+var $elm$html$Html$Events$on = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$virtual_dom$VirtualDom$on,
+			event,
+			$elm$virtual_dom$VirtualDom$Normal(decoder));
+	});
+var $elm$html$Html$Events$onClick = function (msg) {
+	return A2(
+		$elm$html$Html$Events$on,
+		'click',
+		$elm$json$Json$Decode$succeed(msg));
+};
+var $elm$core$Tuple$second = function (_v0) {
+	var y = _v0.b;
+	return y;
+};
+var $elm$html$Html$span = _VirtualDom_node('span');
+var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
+var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
+var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
+var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
+var $author$project$View$app = function (model) {
+	return A2(
+		$elm$html$Html$div,
+		_List_fromArray(
+			[
+				A2($elm$html$Html$Attributes$style, 'position', 'relative'),
+				A2($elm$html$Html$Attributes$style, 'width', '100vw'),
+				A2($elm$html$Html$Attributes$style, 'height', '100vh'),
+				A2($elm$html$Html$Attributes$style, 'background-color', 'rgb(40, 40, 40)')
+			]),
+		_List_fromArray(
+			[
+				(!model.gameStarted) ? A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+						A2($elm$html$Html$Attributes$style, 'flex-direction', 'column'),
+						A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
+						A2($elm$html$Html$Attributes$style, 'transform', 'translate(-50%, -50%)'),
+						A2($elm$html$Html$Attributes$style, 'top', '50%'),
+						A2($elm$html$Html$Attributes$style, 'left', '50%')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$h1,
+						_List_Nil,
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Le jeu du Pong')
+							])),
+						A2(
+						$elm$html$Html$button,
+						_List_fromArray(
+							[
+								$elm$html$Html$Events$onClick($author$project$Types$Start)
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Jouer')
+							]))
+					])) : (model.gameLost ? A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+						A2($elm$html$Html$Attributes$style, 'flex-direction', 'column'),
+						A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
+						A2($elm$html$Html$Attributes$style, 'transform', 'translate(-50%, -50%)'),
+						A2($elm$html$Html$Attributes$style, 'top', '50%'),
+						A2($elm$html$Html$Attributes$style, 'left', '50%')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$h1,
+						_List_Nil,
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Perdu !')
+							])),
+						A2(
+						$elm$html$Html$button,
+						_List_fromArray(
+							[
+								$elm$html$Html$Events$onClick($author$project$Types$Restart)
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Rejouer')
+							]))
+					])) : A2(
+				$elm$html$Html$div,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$span,
+						_List_fromArray(
+							[
+								A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
+								A2($elm$html$Html$Attributes$style, 'top', '50vh'),
+								A2($elm$html$Html$Attributes$style, 'left', '50vw'),
+								A2($elm$html$Html$Attributes$style, 'transform', 'translate(-50%,-50%)'),
+								A2($elm$html$Html$Attributes$style, 'color', 'rgb(250, 240, 198)'),
+								A2($elm$html$Html$Attributes$style, 'font-size', '5em'),
+								A2($elm$html$Html$Attributes$style, 'opacity', '0.3')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text(
+								'Niveau ' + $elm$core$String$fromInt(model.level))
+							])),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
+								A2(
+								$elm$html$Html$Attributes$style,
+								'bottom',
+								$elm$core$String$fromInt($author$project$Constants$barYOffset) + 'px'),
+								A2(
+								$elm$html$Html$Attributes$style,
+								'transform',
+								'translateX(' + ($elm$core$String$fromInt(model.barXOffset) + 'px)')),
+								A2($elm$html$Html$Attributes$style, 'border-radius', '4px'),
+								A2($elm$html$Html$Attributes$style, 'background-color', 'rgb(250, 240, 198)'),
+								A2(
+								$elm$html$Html$Attributes$style,
+								'height',
+								$elm$core$String$fromInt($author$project$Constants$barHeight) + 'px'),
+								A2(
+								$elm$html$Html$Attributes$style,
+								'width',
+								$elm$core$String$fromInt(model.barWidth) + 'px')
+							]),
+						_List_Nil),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
+								A2(
+								$elm$html$Html$Attributes$style,
+								'transform',
+								'translateY(' + ($elm$core$String$fromInt(model.coordinates.b - $author$project$Constants$circleRadius) + ('px) translateX(' + ($elm$core$String$fromInt(model.coordinates.a - $author$project$Constants$circleRadius) + 'px)')))),
+								A2($elm$html$Html$Attributes$style, 'transform-origin', 'center'),
+								A2($elm$html$Html$Attributes$style, 'background-color', 'rgb(251, 73, 52)'),
+								A2($elm$html$Html$Attributes$style, 'border-radius', '100%'),
+								A2(
+								$elm$html$Html$Attributes$style,
+								'width',
+								$elm$core$String$fromInt($author$project$Constants$circleRadius * 2) + 'px'),
+								A2(
+								$elm$html$Html$Attributes$style,
+								'height',
+								$elm$core$String$fromInt($author$project$Constants$circleRadius * 2) + 'px')
+							]),
+						_List_Nil)
+					])))
+			]));
 };
 var $elm$browser$Browser$External = function (a) {
 	return {$: 'External', a: a};
@@ -5196,7 +5374,7 @@ var $elm$core$Basics$min = F2(
 	function (x, y) {
 		return (_Utils_cmp(x, y) < 0) ? x : y;
 	});
-var $author$project$Main$getBarWidth = function (flags) {
+var $author$project$Functions$getBarWidth = function (flags) {
 	return $elm$core$Basics$floor(
 		A2($elm$core$Basics$min, flags.windowWidth / 2, 300));
 };
@@ -5205,17 +5383,18 @@ var $elm$core$Basics$negate = function (n) {
 };
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
-var $author$project$Main$init = function (flags) {
+var $author$project$Functions$init = function (flags) {
 	return _Utils_Tuple2(
 		{
-			barWidth: $author$project$Main$getBarWidth(flags),
+			barWidth: $author$project$Functions$getBarWidth(flags),
 			barXOffset: $elm$core$Basics$floor(
-				(flags.windowWidth / 2) - ($author$project$Main$getBarWidth(flags) / 2)),
+				(flags.windowWidth / 2) - ($author$project$Functions$getBarWidth(flags) / 2)),
 			coordinates: _Utils_Tuple2(
 				$elm$core$Basics$floor(flags.windowWidth / 2),
 				$elm$core$Basics$floor(flags.windowHeight / 2)),
 			gameLost: false,
 			gameStarted: false,
+			level: 1,
 			windowSize: {height: flags.windowHeight, width: flags.windowWidth},
 			xDirection: 1,
 			yDirection: -1
@@ -5223,10 +5402,13 @@ var $author$project$Main$init = function (flags) {
 		$elm$core$Platform$Cmd$none);
 };
 var $elm$json$Json$Decode$int = _Json_decodeInt;
-var $author$project$Main$KeyDown = function (a) {
+var $author$project$Types$KeyDown = function (a) {
 	return {$: 'KeyDown', a: a};
 };
-var $author$project$Main$Move = function (a) {
+var $author$project$Types$LevelUp = function (a) {
+	return {$: 'LevelUp', a: a};
+};
+var $author$project$Types$Move = function (a) {
 	return {$: 'Move', a: a};
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
@@ -5859,51 +6041,84 @@ var $elm$time$Time$every = F2(
 		return $elm$time$Time$subscription(
 			A2($elm$time$Time$Every, interval, tagger));
 	});
-var $author$project$Main$subscriptions = function (model) {
+var $author$project$Subscriptions$subscriptions = function (model) {
 	return (model.gameLost || (!model.gameStarted)) ? $elm$core$Platform$Sub$batch(
 		_List_fromArray(
 			[
-				$ohanhi$keyboard$Keyboard$downs($author$project$Main$KeyDown)
+				$ohanhi$keyboard$Keyboard$downs($author$project$Types$KeyDown)
 			])) : $elm$core$Platform$Sub$batch(
 		_List_fromArray(
 			[
-				A2($elm$time$Time$every, 1, $author$project$Main$Move),
-				$ohanhi$keyboard$Keyboard$downs($author$project$Main$KeyDown)
+				A2($elm$time$Time$every, 1, $author$project$Types$Move),
+				A2($elm$time$Time$every, 10000, $author$project$Types$LevelUp),
+				$ohanhi$keyboard$Keyboard$downs($author$project$Types$KeyDown)
 			]));
 };
-var $author$project$Main$barMoveIncrement = 40;
-var $author$project$Main$barOffsetFromLeft = function (currentPosition) {
+var $author$project$Constants$barMoveIncrement = 40;
+var $author$project$Functions$barOffsetFromLeft = function (currentPosition) {
 	return A2($elm$core$Basics$max, currentPosition, 0);
 };
-var $author$project$Main$barOffsetFromRight = F3(
+var $author$project$Functions$barOffsetFromRight = F3(
 	function (nextPosition, windowSize, barWidth) {
 		return A2($elm$core$Basics$min, nextPosition, windowSize.width - barWidth);
+	});
+var $elm$core$Basics$cos = _Basics_cos;
+var $elm$core$Basics$e = _Basics_e;
+var $r_k_b$complex$Complex$imaginary = function (c) {
+	return c.im;
+};
+var $r_k_b$complex$Complex$mult = F2(
+	function (c1, c2) {
+		return {im: (c1.re * c2.im) + (c2.re * c1.im), re: (c1.re * c2.re) - (c1.im * c2.im)};
+	});
+var $elm$core$Basics$pow = _Basics_pow;
+var $r_k_b$complex$Complex$real = function (c) {
+	return c.re;
+};
+var $elm$core$Basics$sin = _Basics_sin;
+var $r_k_b$complex$Complex$exp = function (c) {
+	return A2(
+		$r_k_b$complex$Complex$mult,
+		{
+			im: 0,
+			re: A2(
+				$elm$core$Basics$pow,
+				$elm$core$Basics$e,
+				$r_k_b$complex$Complex$real(c))
+		},
+		{
+			im: $elm$core$Basics$sin(
+				$r_k_b$complex$Complex$imaginary(c)),
+			re: $elm$core$Basics$cos(
+				$r_k_b$complex$Complex$imaginary(c))
+		});
+};
+var $r_k_b$complex$Complex$fromReal = function (r) {
+	return {im: 0, re: r};
+};
+var $elm$core$Basics$ge = _Utils_ge;
+var $author$project$Constants$pxByMove = 3;
+var $author$project$Functions$getXPosition = F4(
+	function (x, windowSize, direction, level) {
+		var levelComplex = $r_k_b$complex$Complex$fromReal(level);
+		var exponentialLevel = $r_k_b$complex$Complex$exp(levelComplex);
+		return (_Utils_cmp(x, $author$project$Constants$circleRadius) < 0) ? _Utils_Tuple2(
+			(x + $author$project$Constants$pxByMove) + $elm$core$Basics$floor(
+				$r_k_b$complex$Complex$real(exponentialLevel) / 2),
+			1) : ((_Utils_cmp(x, windowSize.width - $author$project$Constants$circleRadius) > -1) ? _Utils_Tuple2(x - $author$project$Constants$pxByMove, -1) : ((direction === 1) ? _Utils_Tuple2(x + $author$project$Constants$pxByMove, 1) : _Utils_Tuple2(x - $author$project$Constants$pxByMove, -1)));
+	});
+var $author$project$Functions$getYPosition = F6(
+	function (coordinates, barXOffset, barWidth, windowSize, direction, level) {
+		return (_Utils_cmp(coordinates.b, $author$project$Constants$circleRadius) < 1) ? {direction: 1, gameLost: false, y: coordinates.b + $author$project$Constants$pxByMove} : ((_Utils_cmp(coordinates.b, windowSize.height - $author$project$Constants$circleRadius) > -1) ? {direction: -1, gameLost: true, y: coordinates.b - $author$project$Constants$pxByMove} : (((direction === 1) && (_Utils_cmp(coordinates.b, ((windowSize.height - $author$project$Constants$barHeight) - $author$project$Constants$barYOffset) - $author$project$Constants$circleRadius) > -1)) ? (((_Utils_cmp(coordinates.a, barXOffset) > -1) && (_Utils_cmp(coordinates.a, barXOffset + barWidth) < 1)) ? {direction: -1, gameLost: false, y: coordinates.b - $author$project$Constants$pxByMove} : {direction: 1, gameLost: false, y: coordinates.b + $author$project$Constants$pxByMove}) : ((direction === 1) ? {direction: 1, gameLost: false, y: coordinates.b + $author$project$Constants$pxByMove} : {direction: -1, gameLost: false, y: coordinates.b - $author$project$Constants$pxByMove})));
 	});
 var $ohanhi$keyboard$Keyboard$rawValue = function (_v0) {
 	var key = _v0.a;
 	return key;
 };
-var $elm$core$Tuple$second = function (_v0) {
-	var y = _v0.b;
-	return y;
-};
-var $author$project$Main$circleRadius = 50;
-var $elm$core$Basics$ge = _Utils_ge;
-var $author$project$Main$pxByMove = 3;
-var $author$project$Main$setXPosition = F3(
-	function (x, windowSize, direction) {
-		return (_Utils_cmp(x, $author$project$Main$circleRadius) < 0) ? _Utils_Tuple2(x + $author$project$Main$pxByMove, 1) : ((_Utils_cmp(x, windowSize.width - $author$project$Main$circleRadius) > -1) ? _Utils_Tuple2(x - $author$project$Main$pxByMove, -1) : ((direction === 1) ? _Utils_Tuple2(x + $author$project$Main$pxByMove, 1) : _Utils_Tuple2(x - $author$project$Main$pxByMove, -1)));
-	});
-var $author$project$Main$barHeight = 20;
-var $author$project$Main$barYOffset = 10;
-var $author$project$Main$setYPosition = F5(
-	function (coordinates, barXOffset, barWidth, windowSize, direction) {
-		return (_Utils_cmp(coordinates.b, $author$project$Main$circleRadius) < 1) ? {direction: 1, gameLost: false, y: coordinates.b + $author$project$Main$pxByMove} : ((_Utils_cmp(coordinates.b, windowSize.height - $author$project$Main$circleRadius) > -1) ? {direction: -1, gameLost: true, y: coordinates.b - $author$project$Main$pxByMove} : (((direction === 1) && (_Utils_cmp(coordinates.b, ((windowSize.height - $author$project$Main$barHeight) - $author$project$Main$barYOffset) - $author$project$Main$circleRadius) > -1)) ? (((_Utils_cmp(coordinates.a, barXOffset) > -1) && (_Utils_cmp(coordinates.a, barXOffset + barWidth) < 1)) ? {direction: -1, gameLost: false, y: coordinates.b - $author$project$Main$pxByMove} : {direction: 1, gameLost: false, y: coordinates.b + $author$project$Main$pxByMove}) : ((direction === 1) ? {direction: 1, gameLost: false, y: coordinates.b + $author$project$Main$pxByMove} : {direction: -1, gameLost: false, y: coordinates.b - $author$project$Main$pxByMove})));
-	});
-var $author$project$Main$update = F2(
+var $author$project$Update$update = F2(
 	function (msg, model) {
-		var yResult = A5($author$project$Main$setYPosition, model.coordinates, model.barXOffset, model.barWidth, model.windowSize, model.yDirection);
-		var x = A3($author$project$Main$setXPosition, model.coordinates.a, model.windowSize, model.xDirection);
+		var yPosition = A6($author$project$Functions$getYPosition, model.coordinates, model.barXOffset, model.barWidth, model.windowSize, model.yDirection, model.level);
+		var xPosition = A4($author$project$Functions$getXPosition, model.coordinates.a, model.windowSize, model.xDirection, model.level);
 		switch (msg.$) {
 			case 'Restart':
 				return _Utils_Tuple2(
@@ -5914,6 +6129,7 @@ var $author$project$Main$update = F2(
 								$elm$core$Basics$floor(model.windowSize.width / 2),
 								$elm$core$Basics$floor(model.windowSize.height / 2)),
 							gameLost: false,
+							level: 1,
 							yDirection: -1
 						}),
 					$elm$core$Platform$Cmd$none);
@@ -5928,11 +6144,17 @@ var $author$project$Main$update = F2(
 					_Utils_update(
 						model,
 						{
-							coordinates: _Utils_Tuple2(x.a, yResult.y),
-							gameLost: yResult.gameLost,
-							xDirection: x.b,
-							yDirection: yResult.direction
+							coordinates: _Utils_Tuple2(xPosition.a, yPosition.y),
+							gameLost: yPosition.gameLost,
+							xDirection: xPosition.b,
+							yDirection: yPosition.direction
 						}),
+					$elm$core$Platform$Cmd$none);
+			case 'LevelUp':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{level: model.level + 1}),
 					$elm$core$Platform$Cmd$none);
 			default:
 				var key = msg.a;
@@ -5943,8 +6165,8 @@ var $author$project$Main$update = F2(
 							_Utils_update(
 								model,
 								{
-									barXOffset: $author$project$Main$barOffsetFromLeft(
-										A3($author$project$Main$barOffsetFromRight, model.barXOffset + $author$project$Main$barMoveIncrement, model.windowSize, model.barWidth))
+									barXOffset: $author$project$Functions$barOffsetFromLeft(
+										A3($author$project$Functions$barOffsetFromRight, model.barXOffset + $author$project$Constants$barMoveIncrement, model.windowSize, model.barWidth))
 								}),
 							$elm$core$Platform$Cmd$none);
 					case 'ArrowLeft':
@@ -5952,8 +6174,8 @@ var $author$project$Main$update = F2(
 							_Utils_update(
 								model,
 								{
-									barXOffset: $author$project$Main$barOffsetFromLeft(
-										A3($author$project$Main$barOffsetFromRight, model.barXOffset - $author$project$Main$barMoveIncrement, model.windowSize, model.barWidth))
+									barXOffset: $author$project$Functions$barOffsetFromLeft(
+										A3($author$project$Functions$barOffsetFromRight, model.barXOffset - $author$project$Constants$barMoveIncrement, model.windowSize, model.barWidth))
 								}),
 							$elm$core$Platform$Cmd$none);
 					default:
@@ -5961,160 +6183,8 @@ var $author$project$Main$update = F2(
 				}
 		}
 	});
-var $author$project$Main$Restart = {$: 'Restart'};
-var $author$project$Main$Start = {$: 'Start'};
-var $elm$html$Html$button = _VirtualDom_node('button');
-var $elm$html$Html$div = _VirtualDom_node('div');
-var $elm$html$Html$h1 = _VirtualDom_node('h1');
-var $elm$virtual_dom$VirtualDom$Normal = function (a) {
-	return {$: 'Normal', a: a};
-};
-var $elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
-var $elm$html$Html$Events$on = F2(
-	function (event, decoder) {
-		return A2(
-			$elm$virtual_dom$VirtualDom$on,
-			event,
-			$elm$virtual_dom$VirtualDom$Normal(decoder));
-	});
-var $elm$html$Html$Events$onClick = function (msg) {
-	return A2(
-		$elm$html$Html$Events$on,
-		'click',
-		$elm$json$Json$Decode$succeed(msg));
-};
-var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
-var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
-var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
-var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $author$project$Main$view = function (model) {
-	return A2(
-		$elm$html$Html$div,
-		_List_fromArray(
-			[
-				A2($elm$html$Html$Attributes$style, 'position', 'relative'),
-				A2($elm$html$Html$Attributes$style, 'width', '100vw'),
-				A2($elm$html$Html$Attributes$style, 'height', '100vh'),
-				A2($elm$html$Html$Attributes$style, 'background-color', 'rgb(40, 40, 40)')
-			]),
-		_List_fromArray(
-			[
-				(!model.gameStarted) ? A2(
-				$elm$html$Html$div,
-				_List_fromArray(
-					[
-						A2($elm$html$Html$Attributes$style, 'display', 'flex'),
-						A2($elm$html$Html$Attributes$style, 'flex-direction', 'column'),
-						A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
-						A2($elm$html$Html$Attributes$style, 'transform', 'translate(-50%, -50%)'),
-						A2($elm$html$Html$Attributes$style, 'top', '50%'),
-						A2($elm$html$Html$Attributes$style, 'left', '50%')
-					]),
-				_List_fromArray(
-					[
-						A2(
-						$elm$html$Html$h1,
-						_List_Nil,
-						_List_fromArray(
-							[
-								$elm$html$Html$text('Le jeu du Pong')
-							])),
-						A2(
-						$elm$html$Html$button,
-						_List_fromArray(
-							[
-								$elm$html$Html$Events$onClick($author$project$Main$Start)
-							]),
-						_List_fromArray(
-							[
-								$elm$html$Html$text('Jouer')
-							]))
-					])) : (model.gameLost ? A2(
-				$elm$html$Html$div,
-				_List_fromArray(
-					[
-						A2($elm$html$Html$Attributes$style, 'display', 'flex'),
-						A2($elm$html$Html$Attributes$style, 'flex-direction', 'column'),
-						A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
-						A2($elm$html$Html$Attributes$style, 'transform', 'translate(-50%, -50%)'),
-						A2($elm$html$Html$Attributes$style, 'top', '50%'),
-						A2($elm$html$Html$Attributes$style, 'left', '50%')
-					]),
-				_List_fromArray(
-					[
-						A2(
-						$elm$html$Html$h1,
-						_List_Nil,
-						_List_fromArray(
-							[
-								$elm$html$Html$text('Perdu !')
-							])),
-						A2(
-						$elm$html$Html$button,
-						_List_fromArray(
-							[
-								$elm$html$Html$Events$onClick($author$project$Main$Restart)
-							]),
-						_List_fromArray(
-							[
-								$elm$html$Html$text('Rejouer')
-							]))
-					])) : A2(
-				$elm$html$Html$div,
-				_List_Nil,
-				_List_fromArray(
-					[
-						A2(
-						$elm$html$Html$div,
-						_List_fromArray(
-							[
-								A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
-								A2(
-								$elm$html$Html$Attributes$style,
-								'bottom',
-								$elm$core$String$fromInt($author$project$Main$barYOffset) + 'px'),
-								A2(
-								$elm$html$Html$Attributes$style,
-								'transform',
-								'translateX(' + ($elm$core$String$fromInt(model.barXOffset) + 'px)')),
-								A2($elm$html$Html$Attributes$style, 'background-color', 'rgb(250, 240, 198)'),
-								A2(
-								$elm$html$Html$Attributes$style,
-								'height',
-								$elm$core$String$fromInt($author$project$Main$barHeight) + 'px'),
-								A2(
-								$elm$html$Html$Attributes$style,
-								'width',
-								$elm$core$String$fromInt(model.barWidth) + 'px')
-							]),
-						_List_Nil),
-						A2(
-						$elm$html$Html$div,
-						_List_fromArray(
-							[
-								A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
-								A2(
-								$elm$html$Html$Attributes$style,
-								'transform',
-								'translateY(' + ($elm$core$String$fromInt(model.coordinates.b - $author$project$Main$circleRadius) + ('px) translateX(' + ($elm$core$String$fromInt(model.coordinates.a - $author$project$Main$circleRadius) + 'px)')))),
-								A2($elm$html$Html$Attributes$style, 'transform-origin', 'center'),
-								A2($elm$html$Html$Attributes$style, 'background-color', 'rgb(251, 73, 52)'),
-								A2($elm$html$Html$Attributes$style, 'border-radius', '100%'),
-								A2(
-								$elm$html$Html$Attributes$style,
-								'width',
-								$elm$core$String$fromInt($author$project$Main$circleRadius * 2) + 'px'),
-								A2(
-								$elm$html$Html$Attributes$style,
-								'height',
-								$elm$core$String$fromInt($author$project$Main$circleRadius * 2) + 'px')
-							]),
-						_List_Nil)
-					])))
-			]));
-};
 var $author$project$Main$main = $elm$browser$Browser$element(
-	{init: $author$project$Main$init, subscriptions: $author$project$Main$subscriptions, update: $author$project$Main$update, view: $author$project$Main$view});
+	{init: $author$project$Functions$init, subscriptions: $author$project$Subscriptions$subscriptions, update: $author$project$Update$update, view: $author$project$View$app});
 _Platform_export({'Main':{'init':$author$project$Main$main(
 	A2(
 		$elm$json$Json$Decode$andThen,
