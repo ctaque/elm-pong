@@ -2,7 +2,7 @@ module Constants exposing (..)
 
 pxByMove : Int
 pxByMove =
-    3
+    2
 
 
 barMoveIncrement : Int

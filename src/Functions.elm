@@ -1,7 +1,12 @@
 module Functions exposing (..)
-import Types exposing (Flags, WindowSize, Model, Msg, Coordinates, SetYPositionReturnType)
-import Constants exposing (circleRadius, pxByMove, barHeight, barYOffset)
-import Complex exposing (real, fromReal, exp)
+
+import Complex exposing (exp, fromReal, real)
+import Constants exposing (barHeight, barYOffset, circleRadius, pxByMove, barMoveIncrement)
+import Types exposing (Coordinates, Flags, Model, Msg, SetYPositionReturnType, WindowSize)
+
+getBarMoveIncrement : Int -> Int
+getBarMoveIncrement level =
+    barMoveIncrement + level * 10
 
 getBarWidth : Flags -> Int
 getBarWidth flags =
@@ -28,48 +33,58 @@ init flags =
 
 
 
--- UPDATE
+-- get the step to move by level
+-- it's the exponential of the level divided by a number
+
+
+getStep : Int -> Int
+getStep level =
+    pxByMove + Basics.floor (real (exp (fromReal ((Basics.toFloat level / 10)))))
 
 
 getXPosition : Int -> WindowSize -> Int -> Int -> ( Int, Int )
 getXPosition x windowSize direction level =
     let
-        levelComplex = fromReal (Basics.toFloat level)
-        exponentialLevel = exp levelComplex
+        step =
+            getStep level
     in
     if x < circleRadius then
-        ( x + pxByMove + Basics.floor (real exponentialLevel / 2), 1 )
+        ( x + step, 1 )
 
     else if x >= windowSize.width - circleRadius then
-        ( x - pxByMove, -1 )
+        ( x - step, -1 )
 
     else if direction == 1 then
-        ( x + pxByMove, 1 )
+        ( x + step, 1 )
 
     else
-        ( x - pxByMove, -1 )
+        ( x - step, -1 )
 
 
 getYPosition : Coordinates -> Int -> Int -> WindowSize -> Int -> Int -> SetYPositionReturnType
 getYPosition coordinates barXOffset barWidth windowSize direction level =
+    let
+        step =
+            getStep level
+    in
     if Tuple.second coordinates <= circleRadius then
-        { y = Tuple.second coordinates + pxByMove, direction = 1, gameLost = False }
+        { y = Tuple.second coordinates + step, direction = 1, gameLost = False }
 
     else if Tuple.second coordinates >= windowSize.height - circleRadius then
-        { y = Tuple.second coordinates - pxByMove, direction = -1, gameLost = True }
+        { y = Tuple.second coordinates - step, direction = -1, gameLost = True }
 
     else if direction == 1 && Tuple.second coordinates >= (windowSize.height - barHeight - barYOffset - circleRadius) then
         if Tuple.first coordinates >= barXOffset && Tuple.first coordinates <= barXOffset + barWidth then
-            { y = Tuple.second coordinates - pxByMove, direction = -1, gameLost = False }
+            { y = Tuple.second coordinates - step, direction = -1, gameLost = False }
 
         else
-            { y = Tuple.second coordinates + pxByMove, direction = 1, gameLost = False }
+            { y = Tuple.second coordinates + step, direction = 1, gameLost = False }
 
     else if direction == 1 then
-        { y = Tuple.second coordinates + pxByMove, direction = 1, gameLost = False }
+        { y = Tuple.second coordinates + step, direction = 1, gameLost = False }
 
     else
-        { y = Tuple.second coordinates - pxByMove, direction = -1, gameLost = False }
+        { y = Tuple.second coordinates - step, direction = -1, gameLost = False }
 
 
 barOffsetFromLeft : Int -> Int
@@ -80,4 +95,3 @@ barOffsetFromLeft currentPosition =
 barOffsetFromRight : Int -> WindowSize -> Int -> Int
 barOffsetFromRight nextPosition windowSize barWidth =
     Basics.min nextPosition (windowSize.width - barWidth)
-

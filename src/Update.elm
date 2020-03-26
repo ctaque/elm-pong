@@ -1,7 +1,6 @@
 module Update exposing (update)
 
-import Constants exposing (barMoveIncrement)
-import Functions exposing (barOffsetFromLeft, barOffsetFromRight, getXPosition, getYPosition)
+import Functions exposing (barOffsetFromLeft, barOffsetFromRight, getXPosition, getYPosition, getBarMoveIncrement)
 import Keyboard exposing (rawValue)
 import Types exposing (Model, Msg(..))
 
@@ -56,14 +55,14 @@ update msg model =
             case keyParsed of
                 "ArrowRight" ->
                     ( { model
-                        | barXOffset = barOffsetFromLeft (barOffsetFromRight (model.barXOffset + barMoveIncrement) model.windowSize model.barWidth)
+                        | barXOffset = barOffsetFromLeft (barOffsetFromRight (model.barXOffset + getBarMoveIncrement model.level) model.windowSize model.barWidth)
                       }
                     , Cmd.none
                     )
 
                 "ArrowLeft" ->
                     ( { model
-                        | barXOffset = barOffsetFromLeft (barOffsetFromRight (model.barXOffset - barMoveIncrement) model.windowSize model.barWidth)
+                        | barXOffset = barOffsetFromLeft (barOffsetFromRight (model.barXOffset - getBarMoveIncrement model.level) model.windowSize model.barWidth)
                       }
                     , Cmd.none
                     )
