@@ -6054,7 +6054,6 @@ var $author$project$Subscriptions$subscriptions = function (model) {
 				$ohanhi$keyboard$Keyboard$downs($author$project$Types$KeyDown)
 			]));
 };
-var $author$project$Constants$barMoveIncrement = 40;
 var $author$project$Functions$barOffsetFromLeft = function (currentPosition) {
 	return A2($elm$core$Basics$max, currentPosition, 0);
 };
@@ -6062,6 +6061,11 @@ var $author$project$Functions$barOffsetFromRight = F3(
 	function (nextPosition, windowSize, barWidth) {
 		return A2($elm$core$Basics$min, nextPosition, windowSize.width - barWidth);
 	});
+var $author$project$Constants$barMoveIncrement = 40;
+var $author$project$Functions$getBarMoveIncrement = function (level) {
+	return $author$project$Constants$barMoveIncrement + level;
+};
+var $elm$core$Basics$ge = _Utils_ge;
 var $elm$core$Basics$cos = _Basics_cos;
 var $elm$core$Basics$e = _Basics_e;
 var $r_k_b$complex$Complex$imaginary = function (c) {
@@ -6096,20 +6100,22 @@ var $r_k_b$complex$Complex$exp = function (c) {
 var $r_k_b$complex$Complex$fromReal = function (r) {
 	return {im: 0, re: r};
 };
-var $elm$core$Basics$ge = _Utils_ge;
-var $author$project$Constants$pxByMove = 3;
+var $author$project$Constants$pxByMove = 2;
+var $author$project$Functions$getStep = function (level) {
+	return $author$project$Constants$pxByMove + $elm$core$Basics$floor(
+		$r_k_b$complex$Complex$real(
+			$r_k_b$complex$Complex$exp(
+				$r_k_b$complex$Complex$fromReal(level / 10))));
+};
 var $author$project$Functions$getXPosition = F4(
 	function (x, windowSize, direction, level) {
-		var levelComplex = $r_k_b$complex$Complex$fromReal(level);
-		var exponentialLevel = $r_k_b$complex$Complex$exp(levelComplex);
-		return (_Utils_cmp(x, $author$project$Constants$circleRadius) < 0) ? _Utils_Tuple2(
-			(x + $author$project$Constants$pxByMove) + $elm$core$Basics$floor(
-				$r_k_b$complex$Complex$real(exponentialLevel) / 2),
-			1) : ((_Utils_cmp(x, windowSize.width - $author$project$Constants$circleRadius) > -1) ? _Utils_Tuple2(x - $author$project$Constants$pxByMove, -1) : ((direction === 1) ? _Utils_Tuple2(x + $author$project$Constants$pxByMove, 1) : _Utils_Tuple2(x - $author$project$Constants$pxByMove, -1)));
+		var step = $author$project$Functions$getStep(level);
+		return (_Utils_cmp(x, $author$project$Constants$circleRadius) < 0) ? _Utils_Tuple2(x + step, 1) : ((_Utils_cmp(x, windowSize.width - $author$project$Constants$circleRadius) > -1) ? _Utils_Tuple2(x - step, -1) : ((direction === 1) ? _Utils_Tuple2(x + step, 1) : _Utils_Tuple2(x - step, -1)));
 	});
 var $author$project$Functions$getYPosition = F6(
 	function (coordinates, barXOffset, barWidth, windowSize, direction, level) {
-		return (_Utils_cmp(coordinates.b, $author$project$Constants$circleRadius) < 1) ? {direction: 1, gameLost: false, y: coordinates.b + $author$project$Constants$pxByMove} : ((_Utils_cmp(coordinates.b, windowSize.height - $author$project$Constants$circleRadius) > -1) ? {direction: -1, gameLost: true, y: coordinates.b - $author$project$Constants$pxByMove} : (((direction === 1) && (_Utils_cmp(coordinates.b, ((windowSize.height - $author$project$Constants$barHeight) - $author$project$Constants$barYOffset) - $author$project$Constants$circleRadius) > -1)) ? (((_Utils_cmp(coordinates.a, barXOffset) > -1) && (_Utils_cmp(coordinates.a, barXOffset + barWidth) < 1)) ? {direction: -1, gameLost: false, y: coordinates.b - $author$project$Constants$pxByMove} : {direction: 1, gameLost: false, y: coordinates.b + $author$project$Constants$pxByMove}) : ((direction === 1) ? {direction: 1, gameLost: false, y: coordinates.b + $author$project$Constants$pxByMove} : {direction: -1, gameLost: false, y: coordinates.b - $author$project$Constants$pxByMove})));
+		var step = $author$project$Functions$getStep(level);
+		return (_Utils_cmp(coordinates.b, $author$project$Constants$circleRadius) < 1) ? {direction: 1, gameLost: false, y: coordinates.b + step} : ((_Utils_cmp(coordinates.b, windowSize.height - $author$project$Constants$circleRadius) > -1) ? {direction: -1, gameLost: true, y: coordinates.b - step} : (((direction === 1) && (_Utils_cmp(coordinates.b, ((windowSize.height - $author$project$Constants$barHeight) - $author$project$Constants$barYOffset) - $author$project$Constants$circleRadius) > -1)) ? (((_Utils_cmp(coordinates.a, barXOffset) > -1) && (_Utils_cmp(coordinates.a, barXOffset + barWidth) < 1)) ? {direction: -1, gameLost: false, y: coordinates.b - step} : {direction: 1, gameLost: false, y: coordinates.b + step}) : ((direction === 1) ? {direction: 1, gameLost: false, y: coordinates.b + step} : {direction: -1, gameLost: false, y: coordinates.b - step})));
 	});
 var $ohanhi$keyboard$Keyboard$rawValue = function (_v0) {
 	var key = _v0.a;
@@ -6166,7 +6172,11 @@ var $author$project$Update$update = F2(
 								model,
 								{
 									barXOffset: $author$project$Functions$barOffsetFromLeft(
-										A3($author$project$Functions$barOffsetFromRight, model.barXOffset + $author$project$Constants$barMoveIncrement, model.windowSize, model.barWidth))
+										A3(
+											$author$project$Functions$barOffsetFromRight,
+											model.barXOffset + $author$project$Functions$getBarMoveIncrement(model.level),
+											model.windowSize,
+											model.barWidth))
 								}),
 							$elm$core$Platform$Cmd$none);
 					case 'ArrowLeft':
@@ -6175,7 +6185,11 @@ var $author$project$Update$update = F2(
 								model,
 								{
 									barXOffset: $author$project$Functions$barOffsetFromLeft(
-										A3($author$project$Functions$barOffsetFromRight, model.barXOffset - $author$project$Constants$barMoveIncrement, model.windowSize, model.barWidth))
+										A3(
+											$author$project$Functions$barOffsetFromRight,
+											model.barXOffset - $author$project$Functions$getBarMoveIncrement(model.level),
+											model.windowSize,
+											model.barWidth))
 								}),
 							$elm$core$Platform$Cmd$none);
 					default:
