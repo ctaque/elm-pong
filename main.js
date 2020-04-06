@@ -6371,17 +6371,35 @@ var $author$project$Update$update = F2(
 				var keyParsed = $ohanhi$keyboard$Keyboard$rawValue(key);
 				switch (keyParsed) {
 					case 'ArrowRight':
-						return _Utils_Tuple2(
-							_Utils_update(
-								model,
-								{direction: $author$project$Types$Right}),
-							$elm$core$Platform$Cmd$none);
+						var _v5 = model.direction;
+						if (_v5.$ === 'Left') {
+							return _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{direction: $author$project$Types$None}),
+								$elm$core$Platform$Cmd$none);
+						} else {
+							return _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{direction: $author$project$Types$Right}),
+								$elm$core$Platform$Cmd$none);
+						}
 					case 'ArrowLeft':
-						return _Utils_Tuple2(
-							_Utils_update(
-								model,
-								{direction: $author$project$Types$Left}),
-							$elm$core$Platform$Cmd$none);
+						var _v6 = model.direction;
+						if (_v6.$ === 'Right') {
+							return _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{direction: $author$project$Types$None}),
+								$elm$core$Platform$Cmd$none);
+						} else {
+							return _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{direction: $author$project$Types$Left}),
+								$elm$core$Platform$Cmd$none);
+						}
 					default:
 						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}

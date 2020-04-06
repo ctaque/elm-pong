@@ -98,10 +98,20 @@ update msg model =
             in
             case keyParsed of
                 "ArrowRight" ->
-                    ( { model | direction = Right }, Cmd.none )
+                    case model.direction of
+                        Left ->
+                            ( { model | direction = None }, Cmd.none )
+
+                        _ ->
+                            ( { model | direction = Right }, Cmd.none )
 
                 "ArrowLeft" ->
-                    ( { model | direction = Left }, Cmd.none )
+                    case model.direction of
+                        Right ->
+                            ( { model | direction = None }, Cmd.none )
+
+                        _ ->
+                            ( { model | direction = Left }, Cmd.none )
 
                 _ ->
                     ( model, Cmd.none )
