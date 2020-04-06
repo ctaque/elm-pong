@@ -110,3 +110,7 @@ button {
     color: rgb(250, 240, 198);
     font-size: 3em;
 }
+
+.play-btn{
+    margin-top: 0.5em;
+}

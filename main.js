@@ -4968,16 +4968,6 @@ var $author$project$View$app = function (model) {
 								$elm$html$Html$text('The Pong game')
 							])),
 						A2(
-						$elm$html$Html$button,
-						_List_fromArray(
-							[
-								$elm$html$Html$Events$onClick($author$project$Types$Start)
-							]),
-						_List_fromArray(
-							[
-								$elm$html$Html$text('Play')
-							])),
-						A2(
 						$elm$html$Html$div,
 						_List_fromArray(
 							[
@@ -5035,6 +5025,17 @@ var $author$project$View$app = function (model) {
 												$elm$html$Html$text('→')
 											]))
 									]))
+							])),
+						A2(
+						$elm$html$Html$button,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('play-btn'),
+								$elm$html$Html$Events$onClick($author$project$Types$Start)
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Play')
 							]))
 					])) : (model.gameLost ? A2(
 				$elm$html$Html$div,

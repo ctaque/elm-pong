@@ -15,14 +15,14 @@ app model =
             div
                 [ class "centered-wrapper" ]
                 [ h1 [] [ text "The Pong game" ]
-                , button
-                    [ onClick Start ]
-                    [ text "Play" ]
                 , div [ class "controls-wrapper" ]
                     [ div [ class "control" ] [ span [ class "arrow" ] [ text "←" ], text "Left arrow" ]
                     , div [ class "control" ] [ text " | " ]
                     , div [ class "control" ] [ text "Right arrow", span [ class "arrow" ] [ text "→" ] ]
                     ]
+                , button
+                    [ class "play-btn", onClick Start ]
+                    [ text "Play" ]
                 ]
 
           else if model.gameLost == True then
