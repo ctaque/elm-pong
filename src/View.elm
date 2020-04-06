@@ -1,8 +1,8 @@
 module View exposing (app)
 
 import Constants exposing (barHeight, barYOffset, circleRadius)
-import Html exposing (Html, button, div, h1, span, text)
-import Html.Attributes exposing (class, style)
+import Html exposing (Html, a, button, div, h1, span, text)
+import Html.Attributes exposing (class, href, style, target)
 import Html.Events exposing (onClick)
 import Types exposing (Model, Msg(..))
 
@@ -18,6 +18,11 @@ app model =
                 , button
                     [ onClick Start ]
                     [ text "Play" ]
+                , div [ class "controls-wrapper" ]
+                    [ div [ class "control" ] [ span [ class "arrow" ] [ text "←" ], text "Left arrow" ]
+                    , div [ class "control" ] [ text " | " ]
+                    , div [ class "control" ] [ text "Right arrow", span [ class "arrow" ] [ text "→" ] ]
+                    ]
                 ]
 
           else if model.gameLost == True then
@@ -32,6 +37,7 @@ app model =
                             [ onClick Restart ]
                             [ text "Play again" ]
                         ]
+                    , span [ class "credit" ] [ a [ href "https://github.com/ctaque/elm-pong", target "_blank" ] [ text "A game by Cyprien Taque" ] ]
                     ]
                 ]
 

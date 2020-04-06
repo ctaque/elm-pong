@@ -17,6 +17,7 @@ button {
     border: none;
     background-color: rgb(184, 187, 38);
     transition: all .3s ease;
+    cursor: pointer;
 
 }
 
@@ -36,6 +37,31 @@ button {
     height: 100vh;
 }
 
+.controls-wrapper{
+    display: flex;
+    flex-direction: row;
+}
+
+.controls-wrapper .control{
+    margin: 0.5em;
+    display: flex;
+    color: rgba(250, 240, 198, 0.7);
+    align-items: center;
+}
+
+.controls-wrapper .control .arrow {
+    padding: 2px 8px;
+    margin: 0 0.5em;
+    border-radius: 4px;
+    border: 1px solid rgba(250, 240, 198, 0.7);
+}
+
+
+.controls-wrapper span{
+    color: rgba(250, 240, 198, 0.7);
+}
+
+
 .play-again-wrapper{
     display: flex;
     flex-direction: column;
@@ -52,6 +78,15 @@ button {
     font-size: 2em;
     margin-right: 1em;
     color: rgb(250, 240, 198);
+}
+
+.play-again-wrapper .credit {
+    margin-top: 2em;
+}
+
+.play-again-wrapper .credit a{
+    color: rgba(250, 240, 198, 0.7);
+    text-decoration: none;
 }
 
 .bar{

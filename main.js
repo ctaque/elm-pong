@@ -4879,8 +4879,6 @@ var $elm$core$Result$isOk = function (result) {
 var $elm$json$Json$Decode$andThen = _Json_andThen;
 var $author$project$Types$Restart = {$: 'Restart'};
 var $author$project$Types$Start = {$: 'Start'};
-var $author$project$Constants$barHeight = 20;
-var $author$project$Constants$barYOffset = 10;
 var $elm$json$Json$Decode$map = _Json_map1;
 var $elm$json$Json$Decode$map2 = _Json_map2;
 var $elm$json$Json$Decode$succeed = _Json_succeed;
@@ -4896,6 +4894,9 @@ var $elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
 			return 3;
 	}
 };
+var $elm$html$Html$a = _VirtualDom_node('a');
+var $author$project$Constants$barHeight = 20;
+var $author$project$Constants$barYOffset = 10;
 var $elm$html$Html$button = _VirtualDom_node('button');
 var $author$project$Constants$circleRadius = 50;
 var $elm$json$Json$Encode$string = _Json_wrap;
@@ -4909,6 +4910,12 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
 var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$html$Html$h1 = _VirtualDom_node('h1');
+var $elm$html$Html$Attributes$href = function (url) {
+	return A2(
+		$elm$html$Html$Attributes$stringProperty,
+		'href',
+		_VirtualDom_noJavaScriptUri(url));
+};
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
 };
@@ -4933,6 +4940,7 @@ var $elm$core$Tuple$second = function (_v0) {
 var $elm$html$Html$span = _VirtualDom_node('span');
 var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
 var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
+var $elm$html$Html$Attributes$target = $elm$html$Html$Attributes$stringProperty('target');
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $author$project$View$app = function (model) {
@@ -4968,6 +4976,65 @@ var $author$project$View$app = function (model) {
 						_List_fromArray(
 							[
 								$elm$html$Html$text('Play')
+							])),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('controls-wrapper')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('control')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$span,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('arrow')
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('←')
+											])),
+										$elm$html$Html$text('Left arrow')
+									])),
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('control')
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text(' | ')
+									])),
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('control')
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Right arrow'),
+										A2(
+										$elm$html$Html$span,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('arrow')
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('→')
+											]))
+									]))
 							]))
 					])) : (model.gameLost ? A2(
 				$elm$html$Html$div,
@@ -5020,6 +5087,26 @@ var $author$project$View$app = function (model) {
 										_List_fromArray(
 											[
 												$elm$html$Html$text('Play again')
+											]))
+									])),
+								A2(
+								$elm$html$Html$span,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('credit')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$a,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$href('https://github.com/ctaque/elm-pong'),
+												$elm$html$Html$Attributes$target('_blank')
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('A game by Cyprien Taque')
 											]))
 									]))
 							]))
