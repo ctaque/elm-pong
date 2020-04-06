@@ -1,12 +1,14 @@
 module Functions exposing (..)
 
 import Complex exposing (exp, fromReal, real)
-import Constants exposing (barHeight, barYOffset, circleRadius, pxByMove, barMoveIncrement)
-import Types exposing (Coordinates, Flags, Model, Msg, SetYPositionReturnType, WindowSize)
+import Constants exposing (barHeight, barMoveIncrement, barYOffset, circleRadius, pxByMove)
+import Types exposing (Coordinates, Direction(..), Flags, Model, Msg, SetYPositionReturnType, WindowSize)
+
 
 getBarMoveIncrement : Int -> Int
 getBarMoveIncrement level =
-    barMoveIncrement + level * 10
+    barMoveIncrement + level
+
 
 getBarWidth : Flags -> Int
 getBarWidth flags =
@@ -23,6 +25,7 @@ init flags =
       , gameStarted = False
       , level = 1
       , barWidth = getBarWidth flags
+      , direction = None
       , windowSize =
             { width = flags.windowWidth
             , height = flags.windowHeight
@@ -39,7 +42,7 @@ init flags =
 
 getStep : Int -> Int
 getStep level =
-    pxByMove + Basics.floor (real (exp (fromReal ((Basics.toFloat level / 10)))))
+    pxByMove + Basics.floor (real (exp (fromReal (Basics.toFloat level / 10))))
 
 
 getXPosition : Int -> WindowSize -> Int -> Int -> ( Int, Int )

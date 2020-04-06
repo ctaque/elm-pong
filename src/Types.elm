@@ -7,10 +7,12 @@ import Time
 type Msg
     = Move Time.Posix
     | KeyDown RawKey
+    | KeyUp RawKey
     | Restart
     | Start
     | LevelUp Time.Posix
     | GotWindowDimensions Int Int
+    | MoveBar Time.Posix
 
 
 type alias WindowSize =
@@ -30,6 +32,12 @@ type alias Coordinates =
     ( Int, Int )
 
 
+type Direction
+    = Left
+    | Right
+    | None
+
+
 type alias Model =
     { coordinates : Coordinates
     , xDirection : Int
@@ -40,6 +48,7 @@ type alias Model =
     , gameLost : Bool
     , gameStarted : Bool
     , level : Int
+    , direction : Direction
     }
 
 

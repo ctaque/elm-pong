@@ -5475,6 +5475,7 @@ var $elm$core$Task$perform = F2(
 	});
 var $elm$browser$Browser$element = _Browser_element;
 var $elm$json$Json$Decode$field = _Json_decodeField;
+var $author$project$Types$None = {$: 'None'};
 var $elm$core$Basics$min = F2(
 	function (x, y) {
 		return (_Utils_cmp(x, y) < 0) ? x : y;
@@ -5497,6 +5498,7 @@ var $author$project$Functions$init = function (flags) {
 			coordinates: _Utils_Tuple2(
 				$elm$core$Basics$floor(flags.windowWidth / 2),
 				$elm$core$Basics$floor(flags.windowHeight / 2)),
+			direction: $author$project$Types$None,
 			gameLost: false,
 			gameStarted: false,
 			level: 1,
@@ -5514,11 +5516,17 @@ var $author$project$Types$GotWindowDimensions = F2(
 var $author$project$Types$KeyDown = function (a) {
 	return {$: 'KeyDown', a: a};
 };
+var $author$project$Types$KeyUp = function (a) {
+	return {$: 'KeyUp', a: a};
+};
 var $author$project$Types$LevelUp = function (a) {
 	return {$: 'LevelUp', a: a};
 };
 var $author$project$Types$Move = function (a) {
 	return {$: 'Move', a: a};
+};
+var $author$project$Types$MoveBar = function (a) {
+	return {$: 'MoveBar', a: a};
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
 var $ohanhi$keyboard$Keyboard$RawKey = function (a) {
@@ -6165,6 +6173,11 @@ var $elm$browser$Browser$Events$onResize = function (func) {
 				A2($elm$json$Json$Decode$field, 'innerWidth', $elm$json$Json$Decode$int),
 				A2($elm$json$Json$Decode$field, 'innerHeight', $elm$json$Json$Decode$int))));
 };
+var $elm$browser$Browser$Events$onKeyUp = A2($elm$browser$Browser$Events$on, $elm$browser$Browser$Events$Document, 'keyup');
+var $ohanhi$keyboard$Keyboard$ups = function (toMsg) {
+	return $elm$browser$Browser$Events$onKeyUp(
+		A2($elm$json$Json$Decode$map, toMsg, $ohanhi$keyboard$Keyboard$eventKeyDecoder));
+};
 var $author$project$Subscriptions$subscriptions = function (model) {
 	return (model.gameLost || (!model.gameStarted)) ? $elm$core$Platform$Sub$batch(
 		_List_fromArray(
@@ -6174,8 +6187,10 @@ var $author$project$Subscriptions$subscriptions = function (model) {
 		_List_fromArray(
 			[
 				A2($elm$time$Time$every, 1, $author$project$Types$Move),
+				A2($elm$time$Time$every, 1, $author$project$Types$MoveBar),
 				A2($elm$time$Time$every, 10000, $author$project$Types$LevelUp),
 				$ohanhi$keyboard$Keyboard$downs($author$project$Types$KeyDown),
+				$ohanhi$keyboard$Keyboard$ups($author$project$Types$KeyUp),
 				$elm$browser$Browser$Events$onResize(
 				F2(
 					function (w, h) {
@@ -6183,6 +6198,8 @@ var $author$project$Subscriptions$subscriptions = function (model) {
 					}))
 			]));
 };
+var $author$project$Types$Left = {$: 'Left'};
+var $author$project$Types$Right = {$: 'Right'};
 var $author$project$Functions$barOffsetFromLeft = function (currentPosition) {
 	return A2($elm$core$Basics$max, currentPosition, 0);
 };
@@ -6190,9 +6207,9 @@ var $author$project$Functions$barOffsetFromRight = F3(
 	function (nextPosition, windowSize, barWidth) {
 		return A2($elm$core$Basics$min, nextPosition, windowSize.width - barWidth);
 	});
-var $author$project$Constants$barMoveIncrement = 40;
+var $author$project$Constants$barMoveIncrement = 5;
 var $author$project$Functions$getBarMoveIncrement = function (level) {
-	return $author$project$Constants$barMoveIncrement + (level * 10);
+	return $author$project$Constants$barMoveIncrement + level;
 };
 var $elm$core$Basics$ge = _Utils_ge;
 var $elm$core$Basics$cos = _Basics_cos;
@@ -6300,11 +6317,10 @@ var $author$project$Update$update = F2(
 						model,
 						{level: model.level + 1}),
 					$elm$core$Platform$Cmd$none);
-			default:
-				var key = msg.a;
-				var keyParsed = $ohanhi$keyboard$Keyboard$rawValue(key);
-				switch (keyParsed) {
-					case 'ArrowRight':
+			case 'MoveBar':
+				var _v1 = model.direction;
+				switch (_v1.$) {
+					case 'Right':
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
@@ -6317,7 +6333,7 @@ var $author$project$Update$update = F2(
 											model.barWidth))
 								}),
 							$elm$core$Platform$Cmd$none);
-					case 'ArrowLeft':
+					case 'Left':
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
@@ -6329,6 +6345,44 @@ var $author$project$Update$update = F2(
 											model.windowSize,
 											model.barWidth))
 								}),
+							$elm$core$Platform$Cmd$none);
+					default:
+						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				}
+			case 'KeyDown':
+				var key = msg.a;
+				var keyParsed = $ohanhi$keyboard$Keyboard$rawValue(key);
+				switch (keyParsed) {
+					case 'ArrowRight':
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{direction: $author$project$Types$Right}),
+							$elm$core$Platform$Cmd$none);
+					case 'ArrowLeft':
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{direction: $author$project$Types$Left}),
+							$elm$core$Platform$Cmd$none);
+					default:
+						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				}
+			default:
+				var key = msg.a;
+				var keyParsed = $ohanhi$keyboard$Keyboard$rawValue(key);
+				switch (keyParsed) {
+					case 'ArrowRight':
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{direction: $author$project$Types$None}),
+							$elm$core$Platform$Cmd$none);
+					case 'ArrowLeft':
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{direction: $author$project$Types$None}),
 							$elm$core$Platform$Cmd$none);
 					default:
 						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);

@@ -18,7 +18,9 @@ subscriptions model =
     else
         Sub.batch
             [ Time.every 1 Move
+            , Time.every 1 MoveBar
             , Time.every 10000 LevelUp
             , Keyboard.downs KeyDown
+            , Keyboard.ups KeyUp
             , E.onResize (\w h -> GotWindowDimensions w h)
             ]

@@ -1,5 +1,6 @@
 module Constants exposing (..)
 
+
 pxByMove : Int
 pxByMove =
     2
@@ -7,7 +8,7 @@ pxByMove =
 
 barMoveIncrement : Int
 barMoveIncrement =
-    40
+    5
 
 
 barYOffset : Int

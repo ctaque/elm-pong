@@ -2,7 +2,7 @@ module Update exposing (update)
 
 import Functions exposing (barOffsetFromLeft, barOffsetFromRight, getBarMoveIncrement, getXPosition, getYPosition)
 import Keyboard exposing (rawValue)
-import Types exposing (Model, Msg(..))
+import Types exposing (Direction(..), Model, Msg(..))
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -58,6 +58,25 @@ update msg model =
             , Cmd.none
             )
 
+        MoveBar _ ->
+            case model.direction of
+                Right ->
+                    ( { model
+                        | barXOffset = barOffsetFromLeft (barOffsetFromRight (model.barXOffset + getBarMoveIncrement model.level) model.windowSize model.barWidth)
+                      }
+                    , Cmd.none
+                    )
+
+                Left ->
+                    ( { model
+                        | barXOffset = barOffsetFromLeft (barOffsetFromRight (model.barXOffset - getBarMoveIncrement model.level) model.windowSize model.barWidth)
+                      }
+                    , Cmd.none
+                    )
+
+                None ->
+                    ( model, Cmd.none )
+
         KeyDown key ->
             let
                 keyParsed =
@@ -65,18 +84,25 @@ update msg model =
             in
             case keyParsed of
                 "ArrowRight" ->
-                    ( { model
-                        | barXOffset = barOffsetFromLeft (barOffsetFromRight (model.barXOffset + getBarMoveIncrement model.level) model.windowSize model.barWidth)
-                      }
-                    , Cmd.none
-                    )
+                    ( { model | direction = Right }, Cmd.none )
 
                 "ArrowLeft" ->
-                    ( { model
-                        | barXOffset = barOffsetFromLeft (barOffsetFromRight (model.barXOffset - getBarMoveIncrement model.level) model.windowSize model.barWidth)
-                      }
-                    , Cmd.none
-                    )
+                    ( { model | direction = Left }, Cmd.none )
+
+                _ ->
+                    ( model, Cmd.none )
+
+        KeyUp key ->
+            let
+                keyParsed =
+                    rawValue key
+            in
+            case keyParsed of
+                "ArrowRight" ->
+                    ( { model | direction = None }, Cmd.none )
+
+                "ArrowLeft" ->
+                    ( { model | direction = None }, Cmd.none )
 
                 _ ->
                     ( model, Cmd.none )
