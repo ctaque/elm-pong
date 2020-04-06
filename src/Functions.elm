@@ -10,26 +10,34 @@ getBarMoveIncrement level =
     barMoveIncrement + level
 
 
-getBarWidth : Flags -> Int
-getBarWidth flags =
-    Basics.floor (Basics.min (Basics.toFloat flags.windowWidth / 2) 300)
+getBarWidth : WindowSize -> Int
+getBarWidth windowSize =
+    Basics.floor (Basics.min (Basics.toFloat windowSize.width / 2) 300)
+
+
+getInitialBarXOffset : WindowSize -> Int
+getInitialBarXOffset windowSize =
+    Basics.floor ((toFloat windowSize.width / 2) - (Basics.toFloat (getBarWidth windowSize) / 2))
 
 
 init : Flags -> ( Model, Cmd Msg )
 init flags =
-    ( { coordinates = ( Basics.floor (toFloat flags.windowWidth / 2), Basics.floor (toFloat flags.windowHeight / 2) )
-      , xDirection = 1
-      , yDirection = -1
-      , barXOffset = Basics.floor ((toFloat flags.windowWidth / 2) - (Basics.toFloat (getBarWidth flags) / 2))
-      , gameLost = False
-      , gameStarted = False
-      , level = 1
-      , barWidth = getBarWidth flags
-      , direction = None
-      , windowSize =
+    let
+        windowSize =
             { width = flags.windowWidth
             , height = flags.windowHeight
             }
+    in
+    ( { coordinates = ( Basics.floor (toFloat flags.windowWidth / 2), Basics.floor (toFloat flags.windowHeight / 2) )
+      , xDirection = 1
+      , yDirection = -1
+      , barXOffset = getInitialBarXOffset windowSize
+      , gameLost = False
+      , gameStarted = False
+      , level = 1
+      , barWidth = getBarWidth windowSize
+      , direction = None
+      , windowSize = windowSize
       }
     , Cmd.none
     )

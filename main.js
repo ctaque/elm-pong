@@ -5480,9 +5480,13 @@ var $elm$core$Basics$min = F2(
 	function (x, y) {
 		return (_Utils_cmp(x, y) < 0) ? x : y;
 	});
-var $author$project$Functions$getBarWidth = function (flags) {
+var $author$project$Functions$getBarWidth = function (windowSize) {
 	return $elm$core$Basics$floor(
-		A2($elm$core$Basics$min, flags.windowWidth / 2, 300));
+		A2($elm$core$Basics$min, windowSize.width / 2, 300));
+};
+var $author$project$Functions$getInitialBarXOffset = function (windowSize) {
+	return $elm$core$Basics$floor(
+		(windowSize.width / 2) - ($author$project$Functions$getBarWidth(windowSize) / 2));
 };
 var $elm$core$Basics$negate = function (n) {
 	return -n;
@@ -5490,11 +5494,11 @@ var $elm$core$Basics$negate = function (n) {
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Functions$init = function (flags) {
+	var windowSize = {height: flags.windowHeight, width: flags.windowWidth};
 	return _Utils_Tuple2(
 		{
-			barWidth: $author$project$Functions$getBarWidth(flags),
-			barXOffset: $elm$core$Basics$floor(
-				(flags.windowWidth / 2) - ($author$project$Functions$getBarWidth(flags) / 2)),
+			barWidth: $author$project$Functions$getBarWidth(windowSize),
+			barXOffset: $author$project$Functions$getInitialBarXOffset(windowSize),
 			coordinates: _Utils_Tuple2(
 				$elm$core$Basics$floor(flags.windowWidth / 2),
 				$elm$core$Basics$floor(flags.windowHeight / 2)),
@@ -5502,7 +5506,7 @@ var $author$project$Functions$init = function (flags) {
 			gameLost: false,
 			gameStarted: false,
 			level: 1,
-			windowSize: {height: flags.windowHeight, width: flags.windowWidth},
+			windowSize: windowSize,
 			xDirection: 1,
 			yDirection: -1
 		},
@@ -6263,14 +6267,13 @@ var $author$project$Functions$getYPosition = F6(
 		var step = $author$project$Functions$getStep(level);
 		return (_Utils_cmp(coordinates.b, $author$project$Constants$circleRadius) < 1) ? {direction: 1, gameLost: false, y: coordinates.b + step} : ((_Utils_cmp(coordinates.b, windowSize.height - $author$project$Constants$circleRadius) > -1) ? {direction: -1, gameLost: true, y: coordinates.b - step} : (((direction === 1) && (_Utils_cmp(coordinates.b, ((windowSize.height - $author$project$Constants$barHeight) - $author$project$Constants$barYOffset) - $author$project$Constants$circleRadius) > -1)) ? (((_Utils_cmp(coordinates.a, barXOffset) > -1) && (_Utils_cmp(coordinates.a, barXOffset + barWidth) < 1)) ? {direction: -1, gameLost: false, y: coordinates.b - step} : {direction: 1, gameLost: false, y: coordinates.b + step}) : ((direction === 1) ? {direction: 1, gameLost: false, y: coordinates.b + step} : {direction: -1, gameLost: false, y: coordinates.b - step})));
 	});
+var $elm$core$Debug$log = _Debug_log;
 var $ohanhi$keyboard$Keyboard$rawValue = function (_v0) {
 	var key = _v0.a;
 	return key;
 };
 var $author$project$Update$update = F2(
 	function (msg, model) {
-		var yPosition = A6($author$project$Functions$getYPosition, model.coordinates, model.barXOffset, model.barWidth, model.windowSize, model.yDirection, model.level);
-		var xPosition = A4($author$project$Functions$getXPosition, model.coordinates.a, model.windowSize, model.xDirection, model.level);
 		switch (msg.$) {
 			case 'GotWindowDimensions':
 				var width = msg.a;
@@ -6286,9 +6289,11 @@ var $author$project$Update$update = F2(
 					_Utils_update(
 						model,
 						{
+							barXOffset: $author$project$Functions$getInitialBarXOffset(model.windowSize),
 							coordinates: _Utils_Tuple2(
 								$elm$core$Basics$floor(model.windowSize.width / 2),
 								$elm$core$Basics$floor(model.windowSize.height / 2)),
+							direction: $author$project$Types$None,
 							gameLost: false,
 							level: 1,
 							yDirection: -1
@@ -6301,11 +6306,23 @@ var $author$project$Update$update = F2(
 						{gameStarted: true}),
 					$elm$core$Platform$Cmd$none);
 			case 'Move':
+				var yPosition = A6($author$project$Functions$getYPosition, model.coordinates, model.barXOffset, model.barWidth, model.windowSize, model.yDirection, model.level);
+				var xPosition = A4($author$project$Functions$getXPosition, model.coordinates.a, model.windowSize, model.xDirection, model.level);
+				var nextDirection = function () {
+					var _v2 = yPosition.gameLost;
+					if (_v2) {
+						return $author$project$Types$None;
+					} else {
+						return model.direction;
+					}
+				}();
+				var _v1 = A2($elm$core$Debug$log, 'nextDirection', nextDirection);
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{
 							coordinates: _Utils_Tuple2(xPosition.a, yPosition.y),
+							direction: nextDirection,
 							gameLost: yPosition.gameLost,
 							xDirection: xPosition.b,
 							yDirection: yPosition.direction
@@ -6318,8 +6335,8 @@ var $author$project$Update$update = F2(
 						{level: model.level + 1}),
 					$elm$core$Platform$Cmd$none);
 			case 'MoveBar':
-				var _v1 = model.direction;
-				switch (_v1.$) {
+				var _v3 = model.direction;
+				switch (_v3.$) {
 					case 'Right':
 						return _Utils_Tuple2(
 							_Utils_update(

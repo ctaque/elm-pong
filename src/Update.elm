@@ -1,19 +1,12 @@
 module Update exposing (update)
 
-import Functions exposing (barOffsetFromLeft, barOffsetFromRight, getBarMoveIncrement, getXPosition, getYPosition)
+import Functions exposing (barOffsetFromLeft, barOffsetFromRight, getBarMoveIncrement, getBarWidth, getInitialBarXOffset, getXPosition, getYPosition)
 import Keyboard exposing (rawValue)
 import Types exposing (Direction(..), Model, Msg(..))
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    let
-        xPosition =
-            getXPosition (Tuple.first model.coordinates) model.windowSize model.xDirection model.level
-
-        yPosition =
-            getYPosition model.coordinates model.barXOffset model.barWidth model.windowSize model.yDirection model.level
-    in
     case msg of
         GotWindowDimensions width height ->
             let
@@ -28,6 +21,8 @@ update msg model =
             ( { model
                 | gameLost = False
                 , level = 1
+                , direction = None
+                , barXOffset = getInitialBarXOffset model.windowSize
                 , yDirection = -1
                 , coordinates = ( Basics.floor (Basics.toFloat model.windowSize.width / 2), Basics.floor (Basics.toFloat model.windowSize.height / 2) )
               }
@@ -42,11 +37,30 @@ update msg model =
             )
 
         Move _ ->
+            let
+                xPosition =
+                    getXPosition (Tuple.first model.coordinates) model.windowSize model.xDirection model.level
+
+                yPosition =
+                    getYPosition model.coordinates model.barXOffset model.barWidth model.windowSize model.yDirection model.level
+
+                nextDirection =
+                    case yPosition.gameLost of
+                        True ->
+                            None
+
+                        False ->
+                            model.direction
+
+                _ =
+                    Debug.log "nextDirection" nextDirection
+            in
             ( { model
                 | coordinates = ( Tuple.first xPosition, yPosition.y )
                 , xDirection = Tuple.second xPosition
                 , yDirection = yPosition.direction
                 , gameLost = yPosition.gameLost
+                , direction = nextDirection
               }
             , Cmd.none
             )
