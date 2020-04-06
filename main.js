@@ -4898,6 +4898,15 @@ var $elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
 };
 var $elm$html$Html$button = _VirtualDom_node('button');
 var $author$project$Constants$circleRadius = 50;
+var $elm$json$Json$Encode$string = _Json_wrap;
+var $elm$html$Html$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			$elm$json$Json$Encode$string(string));
+	});
+var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
 var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$html$Html$h1 = _VirtualDom_node('h1');
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
@@ -4931,10 +4940,7 @@ var $author$project$View$app = function (model) {
 		$elm$html$Html$div,
 		_List_fromArray(
 			[
-				A2($elm$html$Html$Attributes$style, 'position', 'relative'),
-				A2($elm$html$Html$Attributes$style, 'width', '100vw'),
-				A2($elm$html$Html$Attributes$style, 'height', '100vh'),
-				A2($elm$html$Html$Attributes$style, 'background-color', 'rgb(40, 40, 40)')
+				$elm$html$Html$Attributes$class('game-board')
 			]),
 		_List_fromArray(
 			[
@@ -4942,12 +4948,7 @@ var $author$project$View$app = function (model) {
 				$elm$html$Html$div,
 				_List_fromArray(
 					[
-						A2($elm$html$Html$Attributes$style, 'display', 'flex'),
-						A2($elm$html$Html$Attributes$style, 'flex-direction', 'column'),
-						A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
-						A2($elm$html$Html$Attributes$style, 'transform', 'translate(-50%, -50%)'),
-						A2($elm$html$Html$Attributes$style, 'top', '50%'),
-						A2($elm$html$Html$Attributes$style, 'left', '50%')
+						$elm$html$Html$Attributes$class('centered-wrapper')
 					]),
 				_List_fromArray(
 					[
@@ -4956,7 +4957,7 @@ var $author$project$View$app = function (model) {
 						_List_Nil,
 						_List_fromArray(
 							[
-								$elm$html$Html$text('Le jeu du Pong')
+								$elm$html$Html$text('The Pong game')
 							])),
 						A2(
 						$elm$html$Html$button,
@@ -4966,65 +4967,86 @@ var $author$project$View$app = function (model) {
 							]),
 						_List_fromArray(
 							[
-								$elm$html$Html$text('Jouer')
+								$elm$html$Html$text('Play')
 							]))
 					])) : (model.gameLost ? A2(
 				$elm$html$Html$div,
 				_List_fromArray(
 					[
-						A2($elm$html$Html$Attributes$style, 'display', 'flex'),
-						A2($elm$html$Html$Attributes$style, 'flex-direction', 'column'),
-						A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
-						A2($elm$html$Html$Attributes$style, 'transform', 'translate(-50%, -50%)'),
-						A2($elm$html$Html$Attributes$style, 'top', '50%'),
-						A2($elm$html$Html$Attributes$style, 'left', '50%')
+						$elm$html$Html$Attributes$class('centered-wrapper')
 					]),
 				_List_fromArray(
 					[
 						A2(
-						$elm$html$Html$h1,
-						_List_Nil,
+						$elm$html$Html$div,
 						_List_fromArray(
 							[
-								$elm$html$Html$text('Perdu !')
-							])),
-						A2(
-						$elm$html$Html$button,
-						_List_fromArray(
-							[
-								$elm$html$Html$Events$onClick($author$project$Types$Restart)
+								$elm$html$Html$Attributes$class('play-again-wrapper')
 							]),
 						_List_fromArray(
 							[
-								$elm$html$Html$text('Rejouer')
+								A2(
+								$elm$html$Html$h1,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Game over')
+									])),
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('footer')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$span,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('level')
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text(
+												'Your level : ' + $elm$core$String$fromInt(model.level))
+											])),
+										A2(
+										$elm$html$Html$button,
+										_List_fromArray(
+											[
+												$elm$html$Html$Events$onClick($author$project$Types$Restart)
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Play again')
+											]))
+									]))
 							]))
 					])) : A2(
 				$elm$html$Html$div,
-				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('game-board--inner-wrapper')
+					]),
 				_List_fromArray(
 					[
 						A2(
 						$elm$html$Html$span,
 						_List_fromArray(
 							[
-								A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
-								A2($elm$html$Html$Attributes$style, 'top', '50vh'),
-								A2($elm$html$Html$Attributes$style, 'left', '50vw'),
-								A2($elm$html$Html$Attributes$style, 'transform', 'translate(-50%,-50%)'),
-								A2($elm$html$Html$Attributes$style, 'color', 'rgb(250, 240, 198)'),
-								A2($elm$html$Html$Attributes$style, 'font-size', '5em'),
-								A2($elm$html$Html$Attributes$style, 'opacity', '0.3')
+								$elm$html$Html$Attributes$class('level')
 							]),
 						_List_fromArray(
 							[
 								$elm$html$Html$text(
-								'Niveau ' + $elm$core$String$fromInt(model.level))
+								'Level ' + $elm$core$String$fromInt(model.level))
 							])),
 						A2(
 						$elm$html$Html$div,
 						_List_fromArray(
 							[
-								A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
+								$elm$html$Html$Attributes$class('bar'),
 								A2(
 								$elm$html$Html$Attributes$style,
 								'bottom',
@@ -5033,8 +5055,6 @@ var $author$project$View$app = function (model) {
 								$elm$html$Html$Attributes$style,
 								'transform',
 								'translateX(' + ($elm$core$String$fromInt(model.barXOffset) + 'px)')),
-								A2($elm$html$Html$Attributes$style, 'border-radius', '4px'),
-								A2($elm$html$Html$Attributes$style, 'background-color', 'rgb(250, 240, 198)'),
 								A2(
 								$elm$html$Html$Attributes$style,
 								'height',
@@ -5049,14 +5069,11 @@ var $author$project$View$app = function (model) {
 						$elm$html$Html$div,
 						_List_fromArray(
 							[
-								A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
+								$elm$html$Html$Attributes$class('ball'),
 								A2(
 								$elm$html$Html$Attributes$style,
 								'transform',
 								'translateY(' + ($elm$core$String$fromInt(model.coordinates.b - $author$project$Constants$circleRadius) + ('px) translateX(' + ($elm$core$String$fromInt(model.coordinates.a - $author$project$Constants$circleRadius) + 'px)')))),
-								A2($elm$html$Html$Attributes$style, 'transform-origin', 'center'),
-								A2($elm$html$Html$Attributes$style, 'background-color', 'rgb(251, 73, 52)'),
-								A2($elm$html$Html$Attributes$style, 'border-radius', '100%'),
 								A2(
 								$elm$html$Html$Attributes$style,
 								'width',
@@ -6063,7 +6080,7 @@ var $author$project$Functions$barOffsetFromRight = F3(
 	});
 var $author$project$Constants$barMoveIncrement = 40;
 var $author$project$Functions$getBarMoveIncrement = function (level) {
-	return $author$project$Constants$barMoveIncrement + level;
+	return $author$project$Constants$barMoveIncrement + (level * 10);
 };
 var $elm$core$Basics$ge = _Utils_ge;
 var $elm$core$Basics$cos = _Basics_cos;
