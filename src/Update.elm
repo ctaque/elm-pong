@@ -1,6 +1,6 @@
 module Update exposing (update)
 
-import Functions exposing (barOffsetFromLeft, barOffsetFromRight, getXPosition, getYPosition, getBarMoveIncrement)
+import Functions exposing (barOffsetFromLeft, barOffsetFromRight, getBarMoveIncrement, getXPosition, getYPosition)
 import Keyboard exposing (rawValue)
 import Types exposing (Model, Msg(..))
 
@@ -15,6 +15,15 @@ update msg model =
             getYPosition model.coordinates model.barXOffset model.barWidth model.windowSize model.yDirection model.level
     in
     case msg of
+        GotWindowDimensions width height ->
+            let
+                windowSize =
+                    { height = height
+                    , width = width
+                    }
+            in
+            ( { model | windowSize = windowSize }, Cmd.none )
+
         Restart ->
             ( { model
                 | gameLost = False
@@ -43,9 +52,11 @@ update msg model =
             )
 
         LevelUp _ ->
-            ({ model
+            ( { model
                 | level = model.level + 1
-            }, Cmd.none)
+              }
+            , Cmd.none
+            )
 
         KeyDown key ->
             let

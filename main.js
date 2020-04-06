@@ -5507,6 +5507,10 @@ var $author$project$Functions$init = function (flags) {
 		$elm$core$Platform$Cmd$none);
 };
 var $elm$json$Json$Decode$int = _Json_decodeInt;
+var $author$project$Types$GotWindowDimensions = F2(
+	function (a, b) {
+		return {$: 'GotWindowDimensions', a: a, b: b};
+	});
 var $author$project$Types$KeyDown = function (a) {
 	return {$: 'KeyDown', a: a};
 };
@@ -6146,6 +6150,21 @@ var $elm$time$Time$every = F2(
 		return $elm$time$Time$subscription(
 			A2($elm$time$Time$Every, interval, tagger));
 	});
+var $elm$browser$Browser$Events$Window = {$: 'Window'};
+var $elm$browser$Browser$Events$onResize = function (func) {
+	return A3(
+		$elm$browser$Browser$Events$on,
+		$elm$browser$Browser$Events$Window,
+		'resize',
+		A2(
+			$elm$json$Json$Decode$field,
+			'target',
+			A3(
+				$elm$json$Json$Decode$map2,
+				func,
+				A2($elm$json$Json$Decode$field, 'innerWidth', $elm$json$Json$Decode$int),
+				A2($elm$json$Json$Decode$field, 'innerHeight', $elm$json$Json$Decode$int))));
+};
 var $author$project$Subscriptions$subscriptions = function (model) {
 	return (model.gameLost || (!model.gameStarted)) ? $elm$core$Platform$Sub$batch(
 		_List_fromArray(
@@ -6156,7 +6175,12 @@ var $author$project$Subscriptions$subscriptions = function (model) {
 			[
 				A2($elm$time$Time$every, 1, $author$project$Types$Move),
 				A2($elm$time$Time$every, 10000, $author$project$Types$LevelUp),
-				$ohanhi$keyboard$Keyboard$downs($author$project$Types$KeyDown)
+				$ohanhi$keyboard$Keyboard$downs($author$project$Types$KeyDown),
+				$elm$browser$Browser$Events$onResize(
+				F2(
+					function (w, h) {
+						return A2($author$project$Types$GotWindowDimensions, w, h);
+					}))
 			]));
 };
 var $author$project$Functions$barOffsetFromLeft = function (currentPosition) {
@@ -6231,6 +6255,15 @@ var $author$project$Update$update = F2(
 		var yPosition = A6($author$project$Functions$getYPosition, model.coordinates, model.barXOffset, model.barWidth, model.windowSize, model.yDirection, model.level);
 		var xPosition = A4($author$project$Functions$getXPosition, model.coordinates.a, model.windowSize, model.xDirection, model.level);
 		switch (msg.$) {
+			case 'GotWindowDimensions':
+				var width = msg.a;
+				var height = msg.b;
+				var windowSize = {height: height, width: width};
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{windowSize: windowSize}),
+					$elm$core$Platform$Cmd$none);
 			case 'Restart':
 				return _Utils_Tuple2(
 					_Utils_update(

@@ -1,10 +1,14 @@
 module Subscriptions exposing (subscriptions)
-import Types exposing (Model, Msg (..))
-import Time
+
+import Browser.Events as E
 import Keyboard
+import Time
+import Types exposing (Model, Msg(..))
+
 
 
 -- SUBSCRIPTIONS
+
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -16,4 +20,5 @@ subscriptions model =
             [ Time.every 1 Move
             , Time.every 10000 LevelUp
             , Keyboard.downs KeyDown
+            , E.onResize (\w h -> GotWindowDimensions w h)
             ]

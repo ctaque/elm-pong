@@ -1,4 +1,5 @@
 module Types exposing (..)
+
 import Keyboard exposing (RawKey)
 import Time
 
@@ -9,6 +10,8 @@ type Msg
     | Restart
     | Start
     | LevelUp Time.Posix
+    | GotWindowDimensions Int Int
+
 
 type alias WindowSize =
     { width : Int
