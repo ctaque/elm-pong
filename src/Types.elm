@@ -8,6 +8,8 @@ type Msg
     = Move Time.Posix
     | KeyDown RawKey
     | KeyUp RawKey
+    | GoLeft
+    | GoRight
     | Restart
     | Start
     | LevelUp Time.Posix

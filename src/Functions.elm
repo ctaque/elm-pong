@@ -1,13 +1,18 @@
 module Functions exposing (..)
 
 import Complex exposing (exp, fromReal, real)
-import Constants exposing (barHeight, barMoveIncrement, barYOffset, circleRadius, pxByMove)
+import Constants exposing (barHeight, barMoveIncrement, barMoveIncrementMobile, barYOffset, circleRadius, pxByMove)
 import Types exposing (Coordinates, Direction(..), Flags, Model, Msg, SetYPositionReturnType, WindowSize)
 
 
 getBarMoveIncrement : Int -> Int
 getBarMoveIncrement level =
     barMoveIncrement + level
+
+
+getBarMoveIncrementMobile : Int -> Int
+getBarMoveIncrementMobile level =
+    barMoveIncrementMobile + level
 
 
 getBarWidth : WindowSize -> Int

@@ -4877,8 +4877,6 @@ var $elm$core$Result$isOk = function (result) {
 	}
 };
 var $elm$json$Json$Decode$andThen = _Json_andThen;
-var $author$project$Types$Restart = {$: 'Restart'};
-var $author$project$Types$Start = {$: 'Start'};
 var $elm$json$Json$Decode$map = _Json_map1;
 var $elm$json$Json$Decode$map2 = _Json_map2;
 var $elm$json$Json$Decode$succeed = _Json_succeed;
@@ -4893,287 +4891,6 @@ var $elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
 		default:
 			return 3;
 	}
-};
-var $elm$html$Html$a = _VirtualDom_node('a');
-var $author$project$Constants$barHeight = 20;
-var $author$project$Constants$barYOffset = 10;
-var $elm$html$Html$button = _VirtualDom_node('button');
-var $author$project$Constants$circleRadius = 50;
-var $elm$json$Json$Encode$string = _Json_wrap;
-var $elm$html$Html$Attributes$stringProperty = F2(
-	function (key, string) {
-		return A2(
-			_VirtualDom_property,
-			key,
-			$elm$json$Json$Encode$string(string));
-	});
-var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
-var $elm$html$Html$div = _VirtualDom_node('div');
-var $elm$html$Html$h1 = _VirtualDom_node('h1');
-var $elm$html$Html$Attributes$href = function (url) {
-	return A2(
-		$elm$html$Html$Attributes$stringProperty,
-		'href',
-		_VirtualDom_noJavaScriptUri(url));
-};
-var $elm$virtual_dom$VirtualDom$Normal = function (a) {
-	return {$: 'Normal', a: a};
-};
-var $elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
-var $elm$html$Html$Events$on = F2(
-	function (event, decoder) {
-		return A2(
-			$elm$virtual_dom$VirtualDom$on,
-			event,
-			$elm$virtual_dom$VirtualDom$Normal(decoder));
-	});
-var $elm$html$Html$Events$onClick = function (msg) {
-	return A2(
-		$elm$html$Html$Events$on,
-		'click',
-		$elm$json$Json$Decode$succeed(msg));
-};
-var $elm$core$Tuple$second = function (_v0) {
-	var y = _v0.b;
-	return y;
-};
-var $elm$html$Html$span = _VirtualDom_node('span');
-var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
-var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
-var $elm$html$Html$Attributes$target = $elm$html$Html$Attributes$stringProperty('target');
-var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
-var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $author$project$View$app = function (model) {
-	return A2(
-		$elm$html$Html$div,
-		_List_fromArray(
-			[
-				$elm$html$Html$Attributes$class('game-board')
-			]),
-		_List_fromArray(
-			[
-				(!model.gameStarted) ? A2(
-				$elm$html$Html$div,
-				_List_fromArray(
-					[
-						$elm$html$Html$Attributes$class('centered-wrapper')
-					]),
-				_List_fromArray(
-					[
-						A2(
-						$elm$html$Html$h1,
-						_List_Nil,
-						_List_fromArray(
-							[
-								$elm$html$Html$text('The Pong game')
-							])),
-						A2(
-						$elm$html$Html$div,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$class('controls-wrapper')
-							]),
-						_List_fromArray(
-							[
-								A2(
-								$elm$html$Html$div,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$class('control')
-									]),
-								_List_fromArray(
-									[
-										A2(
-										$elm$html$Html$span,
-										_List_fromArray(
-											[
-												$elm$html$Html$Attributes$class('arrow')
-											]),
-										_List_fromArray(
-											[
-												$elm$html$Html$text('←')
-											])),
-										$elm$html$Html$text('Left arrow')
-									])),
-								A2(
-								$elm$html$Html$div,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$class('control')
-									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text(' | ')
-									])),
-								A2(
-								$elm$html$Html$div,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$class('control')
-									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text('Right arrow'),
-										A2(
-										$elm$html$Html$span,
-										_List_fromArray(
-											[
-												$elm$html$Html$Attributes$class('arrow')
-											]),
-										_List_fromArray(
-											[
-												$elm$html$Html$text('→')
-											]))
-									]))
-							])),
-						A2(
-						$elm$html$Html$button,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$class('play-btn'),
-								$elm$html$Html$Events$onClick($author$project$Types$Start)
-							]),
-						_List_fromArray(
-							[
-								$elm$html$Html$text('Play')
-							]))
-					])) : (model.gameLost ? A2(
-				$elm$html$Html$div,
-				_List_fromArray(
-					[
-						$elm$html$Html$Attributes$class('centered-wrapper')
-					]),
-				_List_fromArray(
-					[
-						A2(
-						$elm$html$Html$div,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$class('play-again-wrapper')
-							]),
-						_List_fromArray(
-							[
-								A2(
-								$elm$html$Html$h1,
-								_List_Nil,
-								_List_fromArray(
-									[
-										$elm$html$Html$text('Game over')
-									])),
-								A2(
-								$elm$html$Html$div,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$class('footer')
-									]),
-								_List_fromArray(
-									[
-										A2(
-										$elm$html$Html$span,
-										_List_fromArray(
-											[
-												$elm$html$Html$Attributes$class('level')
-											]),
-										_List_fromArray(
-											[
-												$elm$html$Html$text(
-												'Your level : ' + $elm$core$String$fromInt(model.level))
-											])),
-										A2(
-										$elm$html$Html$button,
-										_List_fromArray(
-											[
-												$elm$html$Html$Events$onClick($author$project$Types$Restart)
-											]),
-										_List_fromArray(
-											[
-												$elm$html$Html$text('Play again')
-											]))
-									])),
-								A2(
-								$elm$html$Html$span,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$class('credit')
-									]),
-								_List_fromArray(
-									[
-										A2(
-										$elm$html$Html$a,
-										_List_fromArray(
-											[
-												$elm$html$Html$Attributes$href('https://github.com/ctaque/elm-pong'),
-												$elm$html$Html$Attributes$target('_blank')
-											]),
-										_List_fromArray(
-											[
-												$elm$html$Html$text('A game by Cyprien Taque')
-											]))
-									]))
-							]))
-					])) : A2(
-				$elm$html$Html$div,
-				_List_fromArray(
-					[
-						$elm$html$Html$Attributes$class('game-board--inner-wrapper')
-					]),
-				_List_fromArray(
-					[
-						A2(
-						$elm$html$Html$span,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$class('level')
-							]),
-						_List_fromArray(
-							[
-								$elm$html$Html$text(
-								'Level ' + $elm$core$String$fromInt(model.level))
-							])),
-						A2(
-						$elm$html$Html$div,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$class('bar'),
-								A2(
-								$elm$html$Html$Attributes$style,
-								'bottom',
-								$elm$core$String$fromInt($author$project$Constants$barYOffset) + 'px'),
-								A2(
-								$elm$html$Html$Attributes$style,
-								'transform',
-								'translateX(' + ($elm$core$String$fromInt(model.barXOffset) + 'px)')),
-								A2(
-								$elm$html$Html$Attributes$style,
-								'height',
-								$elm$core$String$fromInt($author$project$Constants$barHeight) + 'px'),
-								A2(
-								$elm$html$Html$Attributes$style,
-								'width',
-								$elm$core$String$fromInt(model.barWidth) + 'px')
-							]),
-						_List_Nil),
-						A2(
-						$elm$html$Html$div,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$class('ball'),
-								A2(
-								$elm$html$Html$Attributes$style,
-								'transform',
-								'translateY(' + ($elm$core$String$fromInt(model.coordinates.b - $author$project$Constants$circleRadius) + ('px) translateX(' + ($elm$core$String$fromInt(model.coordinates.a - $author$project$Constants$circleRadius) + 'px)')))),
-								A2(
-								$elm$html$Html$Attributes$style,
-								'width',
-								$elm$core$String$fromInt($author$project$Constants$circleRadius * 2) + 'px'),
-								A2(
-								$elm$html$Html$Attributes$style,
-								'height',
-								$elm$core$String$fromInt($author$project$Constants$circleRadius * 2) + 'px')
-							]),
-						_List_Nil)
-					])))
-			]));
 };
 var $elm$browser$Browser$External = function (a) {
 	return {$: 'External', a: a};
@@ -6182,7 +5899,7 @@ var $ohanhi$keyboard$Keyboard$ups = function (toMsg) {
 	return $elm$browser$Browser$Events$onKeyUp(
 		A2($elm$json$Json$Decode$map, toMsg, $ohanhi$keyboard$Keyboard$eventKeyDecoder));
 };
-var $author$project$Subscriptions$subscriptions = function (model) {
+var $author$project$Main$subscriptions = function (model) {
 	return (model.gameLost || (!model.gameStarted)) ? $elm$core$Platform$Sub$batch(
 		_List_fromArray(
 			[
@@ -6215,6 +5932,11 @@ var $author$project$Constants$barMoveIncrement = 5;
 var $author$project$Functions$getBarMoveIncrement = function (level) {
 	return $author$project$Constants$barMoveIncrement + level;
 };
+var $author$project$Constants$barMoveIncrementMobile = 80;
+var $author$project$Functions$getBarMoveIncrementMobile = function (level) {
+	return $author$project$Constants$barMoveIncrementMobile + level;
+};
+var $author$project$Constants$circleRadius = 50;
 var $elm$core$Basics$ge = _Utils_ge;
 var $elm$core$Basics$cos = _Basics_cos;
 var $elm$core$Basics$e = _Basics_e;
@@ -6262,6 +5984,12 @@ var $author$project$Functions$getXPosition = F4(
 		var step = $author$project$Functions$getStep(level);
 		return (_Utils_cmp(x, $author$project$Constants$circleRadius) < 0) ? _Utils_Tuple2(x + step, 1) : ((_Utils_cmp(x, windowSize.width - $author$project$Constants$circleRadius) > -1) ? _Utils_Tuple2(x - step, -1) : ((direction === 1) ? _Utils_Tuple2(x + step, 1) : _Utils_Tuple2(x - step, -1)));
 	});
+var $author$project$Constants$barHeight = 20;
+var $author$project$Constants$barYOffset = 10;
+var $elm$core$Tuple$second = function (_v0) {
+	var y = _v0.b;
+	return y;
+};
 var $author$project$Functions$getYPosition = F6(
 	function (coordinates, barXOffset, barWidth, windowSize, direction, level) {
 		var step = $author$project$Functions$getStep(level);
@@ -6272,7 +6000,7 @@ var $ohanhi$keyboard$Keyboard$rawValue = function (_v0) {
 	var key = _v0.a;
 	return key;
 };
-var $author$project$Update$update = F2(
+var $author$project$Main$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
 			case 'GotWindowDimensions':
@@ -6403,7 +6131,7 @@ var $author$project$Update$update = F2(
 					default:
 						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
-			default:
+			case 'KeyUp':
 				var key = msg.a;
 				var keyParsed = $ohanhi$keyboard$Keyboard$rawValue(key);
 				switch (keyParsed) {
@@ -6422,10 +6150,312 @@ var $author$project$Update$update = F2(
 					default:
 						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
+			case 'GoLeft':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							barXOffset: $author$project$Functions$barOffsetFromLeft(
+								A3(
+									$author$project$Functions$barOffsetFromRight,
+									model.barXOffset - $author$project$Functions$getBarMoveIncrementMobile(model.level),
+									model.windowSize,
+									model.barWidth))
+						}),
+					$elm$core$Platform$Cmd$none);
+			default:
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							barXOffset: $author$project$Functions$barOffsetFromLeft(
+								A3(
+									$author$project$Functions$barOffsetFromRight,
+									model.barXOffset + $author$project$Functions$getBarMoveIncrementMobile(model.level),
+									model.windowSize,
+									model.barWidth))
+						}),
+					$elm$core$Platform$Cmd$none);
 		}
 	});
+var $author$project$Types$Restart = {$: 'Restart'};
+var $author$project$Types$Start = {$: 'Start'};
+var $elm$html$Html$a = _VirtualDom_node('a');
+var $elm$html$Html$button = _VirtualDom_node('button');
+var $elm$json$Json$Encode$string = _Json_wrap;
+var $elm$html$Html$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			$elm$json$Json$Encode$string(string));
+	});
+var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
+var $elm$html$Html$div = _VirtualDom_node('div');
+var $elm$html$Html$h1 = _VirtualDom_node('h1');
+var $elm$html$Html$Attributes$href = function (url) {
+	return A2(
+		$elm$html$Html$Attributes$stringProperty,
+		'href',
+		_VirtualDom_noJavaScriptUri(url));
+};
+var $elm$virtual_dom$VirtualDom$Normal = function (a) {
+	return {$: 'Normal', a: a};
+};
+var $elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
+var $elm$html$Html$Events$on = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$virtual_dom$VirtualDom$on,
+			event,
+			$elm$virtual_dom$VirtualDom$Normal(decoder));
+	});
+var $elm$html$Html$Events$onClick = function (msg) {
+	return A2(
+		$elm$html$Html$Events$on,
+		'click',
+		$elm$json$Json$Decode$succeed(msg));
+};
+var $elm$html$Html$span = _VirtualDom_node('span');
+var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
+var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
+var $elm$html$Html$Attributes$target = $elm$html$Html$Attributes$stringProperty('target');
+var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
+var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
+var $author$project$Main$view = function (model) {
+	return A2(
+		$elm$html$Html$div,
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$class('game-board')
+			]),
+		_List_fromArray(
+			[
+				(!model.gameStarted) ? A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('centered-wrapper')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$h1,
+						_List_Nil,
+						_List_fromArray(
+							[
+								$elm$html$Html$text('The Pong game')
+							])),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('controls-wrapper')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('control')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$span,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('arrow')
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('←')
+											])),
+										$elm$html$Html$text('Left arrow')
+									])),
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('control')
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text(' | ')
+									])),
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('control')
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Right arrow'),
+										A2(
+										$elm$html$Html$span,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('arrow')
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('→')
+											]))
+									]))
+							])),
+						A2(
+						$elm$html$Html$button,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('play-btn'),
+								$elm$html$Html$Events$onClick($author$project$Types$Start)
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Play')
+							]))
+					])) : (model.gameLost ? A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('centered-wrapper')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('play-again-wrapper')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$h1,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Game over')
+									])),
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('footer')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$span,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('level')
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text(
+												'Your level : ' + $elm$core$String$fromInt(model.level))
+											])),
+										A2(
+										$elm$html$Html$button,
+										_List_fromArray(
+											[
+												$elm$html$Html$Events$onClick($author$project$Types$Restart)
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Play again')
+											]))
+									])),
+								A2(
+								$elm$html$Html$span,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('credit')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$a,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$href('https://github.com/ctaque/elm-pong'),
+												$elm$html$Html$Attributes$target('_blank')
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('A game by Cyprien Taque')
+											]))
+									]))
+							]))
+					])) : A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('game-board--inner-wrapper')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$span,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('level')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text(
+								'Level ' + $elm$core$String$fromInt(model.level))
+							])),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('bar'),
+								A2(
+								$elm$html$Html$Attributes$style,
+								'bottom',
+								$elm$core$String$fromInt($author$project$Constants$barYOffset) + 'px'),
+								A2(
+								$elm$html$Html$Attributes$style,
+								'transform',
+								'translateX(' + ($elm$core$String$fromInt(model.barXOffset) + 'px)')),
+								A2(
+								$elm$html$Html$Attributes$style,
+								'height',
+								$elm$core$String$fromInt($author$project$Constants$barHeight) + 'px'),
+								A2(
+								$elm$html$Html$Attributes$style,
+								'width',
+								$elm$core$String$fromInt(model.barWidth) + 'px')
+							]),
+						_List_Nil),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('ball'),
+								A2(
+								$elm$html$Html$Attributes$style,
+								'transform',
+								'translateY(' + ($elm$core$String$fromInt(model.coordinates.b - $author$project$Constants$circleRadius) + ('px) translateX(' + ($elm$core$String$fromInt(model.coordinates.a - $author$project$Constants$circleRadius) + 'px)')))),
+								A2(
+								$elm$html$Html$Attributes$style,
+								'width',
+								$elm$core$String$fromInt($author$project$Constants$circleRadius * 2) + 'px'),
+								A2(
+								$elm$html$Html$Attributes$style,
+								'height',
+								$elm$core$String$fromInt($author$project$Constants$circleRadius * 2) + 'px')
+							]),
+						_List_Nil)
+					])))
+			]));
+};
 var $author$project$Main$main = $elm$browser$Browser$element(
-	{init: $author$project$Functions$init, subscriptions: $author$project$Subscriptions$subscriptions, update: $author$project$Update$update, view: $author$project$View$app});
+	{init: $author$project$Functions$init, subscriptions: $author$project$Main$subscriptions, update: $author$project$Main$update, view: $author$project$Main$view});
 _Platform_export({'Main':{'init':$author$project$Main$main(
 	A2(
 		$elm$json$Json$Decode$andThen,

@@ -11,6 +11,11 @@ barMoveIncrement =
     5
 
 
+barMoveIncrementMobile : Int
+barMoveIncrementMobile =
+    80
+
+
 barYOffset : Int
 barYOffset =
     10
