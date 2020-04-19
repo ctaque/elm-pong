@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/ctaque/elm-pong/issues"
   },
-  "homepage": "https://github.com/ctaque/elm-pong#readme"
+  "homepage": "https://github.com/ctaque/elm-pong#readme",
+  "dependencies": {
+    "dotenv": "^8.2.0"
+  }
 }
