@@ -20,6 +20,11 @@ button {
     cursor: pointer;
 
 }
+button:disabled{
+    opacity: .5;
+}
+
+
 
 .game-board{
     position: relative;
@@ -136,4 +141,32 @@ button {
 
 .control-btn.right{
     right: 10px;
+}
+
+.form{
+    min-width: 250px;
+    flex-direction: column;
+    display: flex;
+}
+.form .form-item{
+    margin-bottom: 1em;
+    flex-direction: column;
+    display: flex;
+}
+
+.form .form-item input{
+    display: block;
+    background-color: transparent;
+    padding: 8px 5px;
+    border-radius: 4px;
+    border: 1px solid rgb(85, 85, 85);
+    color: rgb(250 250 198);
+    font-size: 1.2em;
+    font-weight: 200;
+    text-align: center;
+}
+
+.form .form-item input:focus{
+    border: 1px solid rgb(250 250 198);
+    outline: none;
 }

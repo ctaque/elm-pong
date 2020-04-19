@@ -43,6 +43,8 @@ init flags =
       , barWidth = getBarWidth windowSize
       , direction = None
       , windowSize = windowSize
+      , pseudo = ""
+      , pseudoErrors = Maybe.Just ""
       }
     , Cmd.none
     )

@@ -15,6 +15,7 @@ type Msg
     | LevelUp Time.Posix
     | GotWindowDimensions Int Int
     | MoveBar Time.Posix
+    | HandlePseudoChange String
 
 
 type alias WindowSize =
@@ -51,6 +52,8 @@ type alias Model =
     , gameStarted : Bool
     , level : Int
     , direction : Direction
+    , pseudo : String
+    , pseudoErrors : Maybe String
     }
 
 

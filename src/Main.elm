@@ -4,9 +4,9 @@ import Browser
 import Browser.Events as E
 import Constants exposing (barHeight, barYOffset, circleRadius)
 import Functions exposing (barOffsetFromLeft, barOffsetFromRight, getBarMoveIncrement, getBarMoveIncrementMobile, getBarWidth, getInitialBarXOffset, getXPosition, getYPosition, init)
-import Html exposing (Html, a, button, div, h1, span, text)
-import Html.Attributes exposing (class, href, style, target)
-import Html.Events exposing (onClick, onMouseUp)
+import Html exposing (Html, a, button, div, h1, input, span, text)
+import Html.Attributes exposing (attribute, class, href, style, target)
+import Html.Events exposing (onClick, onInput, onMouseUp)
 import Keyboard exposing (rawValue)
 import Time
 import Types exposing (Direction(..), Model, Msg(..))
@@ -156,6 +156,20 @@ update msg model =
             , Cmd.none
             )
 
+        HandlePseudoChange pseudo ->
+            let
+                pseudoErrors =
+                    if String.length pseudo <= 1 then
+                        Maybe.Just "Min 2 chars"
+
+                    else if String.length pseudo >= 50 then
+                        Maybe.Just "Max 50 chars"
+
+                    else
+                        Maybe.Nothing
+            in
+            ( { model | pseudo = pseudo, pseudoErrors = pseudoErrors }, Cmd.none )
+
 
 view : Model -> Html Msg
 view model =
@@ -165,13 +179,26 @@ view model =
             div
                 [ class "centered-wrapper" ]
                 [ h1 [] [ text "The Pong game" ]
+                , div [ class "form" ]
+                    [ div [ class "form-item" ]
+                        [ input [ onInput HandlePseudoChange, attribute "placeholder" "Pick a username" ] [ text model.pseudo ]
+                        ]
+                    ]
                 , div [ class "controls-wrapper" ]
                     [ div [ class "control" ] [ span [ class "arrow" ] [ text "←" ], text "Left arrow" ]
                     , div [ class "control" ] [ text " | " ]
                     , div [ class "control" ] [ text "Right arrow", span [ class "arrow" ] [ text "→" ] ]
                     ]
                 , button
-                    [ class "play-btn", onClick Start ]
+                    [ class "play-btn"
+                    , onClick Start
+                    , case model.pseudoErrors of
+                        Just error ->
+                            attribute "disabled" "true"
+
+                        Nothing ->
+                            attribute "enabled" "true"
+                    ]
                     [ text "Play" ]
                 ]
 
