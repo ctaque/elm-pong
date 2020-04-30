@@ -54,10 +54,14 @@ type alias Model =
     , direction : Direction
     , pseudo : String
     , pseudoErrors : Maybe String
+    , apiUrl : String
+    , jwtSecret : String
     }
 
 
 type alias Flags =
     { windowHeight : Int
     , windowWidth : Int
+    , apiUrl : String
+    , jwtSecret : String
     }

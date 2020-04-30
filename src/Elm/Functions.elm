@@ -45,6 +45,8 @@ init flags =
       , windowSize = windowSize
       , pseudo = ""
       , pseudoErrors = Maybe.Just ""
+      , apiUrl = flags.apiUrl
+      , jwtSecret = flags.jwtSecret
       }
     , Cmd.none
     )
