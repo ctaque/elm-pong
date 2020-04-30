@@ -1,4 +1,4 @@
-module Types exposing (..)
+module Elm.Types exposing (..)
 
 import Keyboard exposing (RawKey)
 import Time

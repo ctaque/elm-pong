@@ -1,4 +1,4 @@
-module Constants exposing (..)
+module Elm.Constants exposing (..)
 
 
 pxByMove : Int

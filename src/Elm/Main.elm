@@ -1,15 +1,15 @@
-module Main exposing (main)
+module Elm.Main exposing (main)
 
 import Browser
 import Browser.Events as E
-import Constants exposing (barHeight, barYOffset, circleRadius)
-import Functions exposing (barOffsetFromLeft, barOffsetFromRight, getBarMoveIncrement, getBarMoveIncrementMobile, getBarWidth, getInitialBarXOffset, getXPosition, getYPosition, init)
+import Elm.Constants exposing (barHeight, barYOffset, circleRadius)
+import Elm.Functions exposing (barOffsetFromLeft, barOffsetFromRight, getBarMoveIncrement, getBarMoveIncrementMobile, getBarWidth, getInitialBarXOffset, getXPosition, getYPosition, init)
+import Elm.Types exposing (Direction(..), Model, Msg(..))
 import Html exposing (Html, a, button, div, h1, input, span, text)
 import Html.Attributes exposing (attribute, class, href, style, target)
 import Html.Events exposing (onClick, onInput, onMouseUp)
 import Keyboard exposing (rawValue)
 import Time
-import Types exposing (Direction(..), Model, Msg(..))
 
 
 main =
