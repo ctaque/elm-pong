@@ -182,6 +182,12 @@ view model =
                 , div [ class "form" ]
                     [ div [ class "form-item" ]
                         [ input [ onInput HandlePseudoChange, attribute "placeholder" "Pick a username" ] [ text model.pseudo ]
+                        , case model.pseudoErrors of
+                            Nothing ->
+                                span [] []
+
+                            Just error ->
+                                span [ class "error-tip" ] [ text error ]
                         ]
                     ]
                 , div [ class "controls-wrapper" ]

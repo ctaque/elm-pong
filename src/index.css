@@ -157,6 +157,10 @@ button:disabled{
     display: flex;
 }
 
+.form .form-item .error-tip{
+    color: rgb(236, 62, 47);
+}
+
 .form .form-item input{
     display: block;
     background-color: transparent;
