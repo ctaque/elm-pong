@@ -19,6 +19,9 @@ main =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        SetScore _ ->
+            ( { model | score = model.score + 1 }, Cmd.none )
+
         GotWindowDimensions width height ->
             let
                 windowSize =
@@ -35,6 +38,7 @@ update msg model =
                 , direction = None
                 , barXOffset = getInitialBarXOffset model.windowSize
                 , yDirection = -1
+                , score = 100
                 , coordinates = ( Basics.floor (Basics.toFloat model.windowSize.width / 2), Basics.floor (Basics.toFloat model.windowSize.height / 2) )
               }
             , Cmd.none
@@ -62,9 +66,6 @@ update msg model =
 
                         False ->
                             model.direction
-
-                _ =
-                    Debug.log "nextDirection" nextDirection
             in
             ( { model
                 | coordinates = ( Tuple.first xPosition, yPosition.y )
@@ -266,4 +267,10 @@ subscriptions model =
             , Keyboard.downs KeyDown
             , Keyboard.ups KeyUp
             , E.onResize (\w h -> GotWindowDimensions w h)
+            , case model.gameStarted of
+                True ->
+                    Time.every 100 SetScore
+
+                False ->
+                    Sub.none
             ]

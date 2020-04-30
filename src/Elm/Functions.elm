@@ -47,6 +47,7 @@ init flags =
       , pseudoErrors = Maybe.Just ""
       , apiUrl = flags.apiUrl
       , jwtSecret = flags.jwtSecret
+      , score = 100
       }
     , Cmd.none
     )

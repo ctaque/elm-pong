@@ -16,6 +16,7 @@ type Msg
     | GotWindowDimensions Int Int
     | MoveBar Time.Posix
     | HandlePseudoChange String
+    | SetScore Time.Posix
 
 
 type alias WindowSize =
@@ -56,6 +57,7 @@ type alias Model =
     , pseudoErrors : Maybe String
     , apiUrl : String
     , jwtSecret : String
+    , score : Int
     }
 
 
