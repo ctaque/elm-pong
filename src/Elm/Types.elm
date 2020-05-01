@@ -23,6 +23,7 @@ type Msg
     | GotTopScores (WebData (List Score))
     | SetTableState Table.State
     | FilterUsername String
+    | GotJwt String
 
 
 type alias WindowSize =

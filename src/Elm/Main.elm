@@ -1,4 +1,4 @@
-module Elm.Main exposing (main)
+port module Elm.Main exposing (main)
 
 import Browser
 import Browser.Events as E
@@ -22,6 +22,9 @@ main =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        GotJwt jwt ->
+            ( { model | jwtToken = jwt }, Cmd.none )
+
         FilterUsername username ->
             ( { model | filterScoreUsername = username }
             , getTopScores model.jwtToken model.apiUrl username
@@ -318,6 +321,9 @@ view model =
         ]
 
 
+port getJwt : (String -> msg) -> Sub msg
+
+
 
 -- SUBSCRIPTIONS
 
@@ -325,7 +331,10 @@ view model =
 subscriptions : Model -> Sub Msg
 subscriptions model =
     if model.gameLost || model.gameStarted == False then
-        Sub.batch [ Keyboard.downs KeyDown ]
+        Sub.batch
+            [ Keyboard.downs KeyDown
+            , getJwt GotJwt
+            ]
 
     else
         Sub.batch
@@ -335,6 +344,7 @@ subscriptions model =
             , Keyboard.downs KeyDown
             , Keyboard.ups KeyUp
             , E.onResize (\w h -> GotWindowDimensions w h)
+            , getJwt GotJwt
             , case model.gameStarted of
                 True ->
                     Time.every 100 SetScore

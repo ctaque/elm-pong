@@ -6,18 +6,37 @@ import './index.css';
 import * as serviceWorker from './serviceWorker';
 import JWT from 'jsonwebtoken';
 
+const getToken = () => JWT.sign({
+    "role": "web_anon",
+    "exp": Math.round(
+        (new Date().getTime() + 60 * 1000 /* milliseconds */) / 1000
+        /* seconds */) // 1 min
+}, process.env.REACT_APP_JWT_SECRET || '');
 
-const flags = {
-	windowWidth: window.innerWidth,
-	windowHeight: window.innerHeight,
-    apiUrl: process.env.REACT_APP_API_URL,
-    jwtToken: JWT.sign({"role": "web_anon"}, process.env.REACT_APP_JWT_SECRET || '')
+const Component = (props: {}) => {
+
+    const flags = {
+        windowWidth: window.innerWidth,
+        windowHeight: window.innerHeight,
+        apiUrl: process.env.REACT_APP_API_URL,
+        jwtToken: getToken()
+    };
+    return (
+        <React.StrictMode>
+            <Elm src={Main.Elm.Elm.Main} flags={flags} ports={setupPorts} />
+        </React.StrictMode>
+    );
 };
+
+function setupPorts(ports: any) {
+    window.setInterval(() => {
+        ports.getJwt.send(getToken());
+    }, 10000);
+}
+
 ReactDOM.render(
-  <React.StrictMode>
-      <Elm src={Main.Elm.Elm.Main} flags={flags} />
-  </React.StrictMode>,
-  document.getElementById('root')
+    <Component />,
+    document.getElementById('root')
 );
 
 // If you want your app to work offline and load faster, you can change
