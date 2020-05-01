@@ -22,6 +22,7 @@ type Msg
     | GotScore (WebData (List Score))
     | GotTopScores (WebData (List Score))
     | SetTableState Table.State
+    | FilterUsername String
 
 
 type alias WindowSize =
@@ -65,6 +66,7 @@ type alias Model =
     , score : Int
     , topScores : WebData (List Score)
     , tableState : Table.State
+    , filterScoreUsername : String
     }
 
 

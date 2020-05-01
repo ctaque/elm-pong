@@ -55,7 +55,8 @@ init flags =
       , jwtToken = flags.jwtToken
       , score = 100
       , topScores = RemoteData.NotAsked
-      , tableState = Table.initialSort "Score"
+      , tableState = Table.sortBy "score" False
+      , filterScoreUsername = ""
       }
     , Cmd.none
     )
@@ -158,12 +159,12 @@ sendScore token url pseudo level score =
         }
 
 
-getTopScores : String -> String -> Cmd Msg
-getTopScores token url =
+getTopScores : String -> String -> String -> Cmd Msg
+getTopScores token url username =
     Http.request
         { method = "GET"
         , body = Http.emptyBody
-        , url = url ++ "/scores?limit=10&offset=0&order=score.desc"
+        , url = url ++ "/scores?limit=10&offset=0&order=score.desc&pseudo=like.%25" ++ username ++ "%25"
         , headers =
             [ Http.header "Authorization" ("Bearer" ++ token)
             ]

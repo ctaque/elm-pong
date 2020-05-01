@@ -22,6 +22,11 @@ main =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        FilterUsername username ->
+            ( { model | filterScoreUsername = username }
+            , getTopScores model.jwtToken model.apiUrl username
+            )
+
         SetTableState newState ->
             ( { model | tableState = newState }
             , Cmd.none
@@ -31,7 +36,7 @@ update msg model =
             ( { model | topScores = scores }, Cmd.none )
 
         GotScore _ ->
-            ( model, getTopScores model.jwtToken model.apiUrl )
+            ( model, getTopScores model.jwtToken model.apiUrl "*" )
 
         SetScore _ ->
             ( { model | score = model.score + 1 }, Cmd.none )
@@ -198,8 +203,8 @@ config =
         , toMsg = SetTableState
         , columns =
             [ Table.stringColumn "Username" .pseudo
-            , Table.intColumn "level" .level
-            , Table.intColumn "score" .score
+            , Table.intColumn "Level" .level
+            , Table.intColumn "Score" .score
             ]
         , customizations =
             { defaultCustomizations | tableAttrs = toTableAttrs }
@@ -266,9 +271,14 @@ view model =
                         ]
                     , div [ class "scores" ]
                         [ h2 [] [ text "Scores :" ]
+                        , input
+                            [ onInput FilterUsername
+                            , attribute "placeholder" "Filter username"
+                            ]
+                            []
                         , case model.topScores of
                             RemoteData.Loading ->
-                                span [] [ text "Chargement" ]
+                                span [] [ text "Loading" ]
 
                             RemoteData.NotAsked ->
                                 div [] []
