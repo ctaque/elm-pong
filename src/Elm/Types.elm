@@ -1,6 +1,7 @@
 module Elm.Types exposing (..)
 
 import Keyboard exposing (RawKey)
+import RemoteData exposing (WebData)
 import Time
 
 
@@ -17,6 +18,8 @@ type Msg
     | MoveBar Time.Posix
     | HandlePseudoChange String
     | SetScore Time.Posix
+    | GotScore (WebData (List Score))
+    | GotTopScores (WebData (List Score))
 
 
 type alias WindowSize =
@@ -56,8 +59,9 @@ type alias Model =
     , pseudo : String
     , pseudoErrors : Maybe String
     , apiUrl : String
-    , jwtSecret : String
+    , jwtToken : String
     , score : Int
+    , topScores : WebData (List Score)
     }
 
 
@@ -65,5 +69,10 @@ type alias Flags =
     { windowHeight : Int
     , windowWidth : Int
     , apiUrl : String
-    , jwtSecret : String
+    , jwtToken : String
+    }
+
+
+type alias Score =
+    { id : Int
     }

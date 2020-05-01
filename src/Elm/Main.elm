@@ -3,11 +3,13 @@ module Elm.Main exposing (main)
 import Browser
 import Browser.Events as E
 import Elm.Constants exposing (barHeight, barYOffset, circleRadius)
-import Elm.Functions exposing (barOffsetFromLeft, barOffsetFromRight, getBarMoveIncrement, getBarMoveIncrementMobile, getBarWidth, getInitialBarXOffset, getXPosition, getYPosition, init)
+import Elm.Functions exposing (barOffsetFromLeft, barOffsetFromRight, getBarMoveIncrement, getBarMoveIncrementMobile, getBarWidth, getInitialBarXOffset, getTopScores, getXPosition, getYPosition, init, sendScore)
 import Elm.Types exposing (Direction(..), Model, Msg(..))
 import Html exposing (Html, a, button, div, h1, input, span, text)
 import Html.Attributes exposing (attribute, class, href, style, target)
 import Html.Events exposing (onClick, onInput, onMouseUp)
+import Json.Decode exposing (Decoder, float, int, nullable, string)
+import JsonWebToken as JWT exposing (hmacSha256)
 import Keyboard exposing (rawValue)
 import Time
 
@@ -19,6 +21,12 @@ main =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        GotTopScores scores ->
+            ( { model | topScores = scores }, Cmd.none )
+
+        GotScore _ ->
+            ( model, getTopScores model.jwtToken model.apiUrl )
+
         SetScore _ ->
             ( { model | score = model.score + 1 }, Cmd.none )
 
@@ -74,7 +82,12 @@ update msg model =
                 , gameLost = yPosition.gameLost
                 , direction = nextDirection
               }
-            , Cmd.none
+            , case yPosition.gameLost of
+                True ->
+                    sendScore model.jwtToken model.apiUrl model.pseudo model.level model.score
+
+                False ->
+                    Cmd.none
             )
 
         LevelUp _ ->

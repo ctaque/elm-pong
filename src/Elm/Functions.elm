@@ -2,7 +2,12 @@ module Elm.Functions exposing (..)
 
 import Complex exposing (exp, fromReal, real)
 import Elm.Constants exposing (barHeight, barMoveIncrement, barMoveIncrementMobile, barYOffset, circleRadius, pxByMove)
-import Elm.Types exposing (Coordinates, Direction(..), Flags, Model, Msg, SetYPositionReturnType, WindowSize)
+import Elm.Types exposing (Coordinates, Direction(..), Flags, Model, Msg(..), Score, SetYPositionReturnType, WindowSize)
+import Http
+import Json.Decode exposing (Decoder, float, int, list, nullable, string)
+import Json.Decode.Pipeline exposing (hardcoded, optional, required)
+import Json.Encode
+import RemoteData
 
 
 getBarMoveIncrement : Int -> Int
@@ -46,8 +51,9 @@ init flags =
       , pseudo = ""
       , pseudoErrors = Maybe.Just ""
       , apiUrl = flags.apiUrl
-      , jwtSecret = flags.jwtSecret
+      , jwtToken = flags.jwtToken
       , score = 100
+      , topScores = RemoteData.NotAsked
       }
     , Cmd.none
     )
@@ -116,3 +122,47 @@ barOffsetFromLeft currentPosition =
 barOffsetFromRight : Int -> WindowSize -> Int -> Int
 barOffsetFromRight nextPosition windowSize barWidth =
     Basics.min nextPosition (windowSize.width - barWidth)
+
+
+decodeScore : Decoder Score
+decodeScore =
+    Json.Decode.succeed Score
+        |> required "id" int
+
+
+sendScore : String -> String -> String -> Int -> Int -> Cmd Msg
+sendScore token url pseudo level score =
+    Http.request
+        { method = "post"
+        , url = url ++ "/scores"
+        , headers =
+            [ Http.header "Authorization" ("Bearer " ++ token)
+            , Http.header "Prefer" "return=representation"
+            ]
+        , body =
+            Http.jsonBody
+                (Json.Encode.object
+                    [ ( "pseudo", Json.Encode.string pseudo )
+                    , ( "level", Json.Encode.int level )
+                    , ( "score", Json.Encode.int score )
+                    ]
+                )
+        , expect = Http.expectJson (RemoteData.fromResult >> GotScore) (list decodeScore)
+        , tracker = Nothing
+        , timeout = Nothing
+        }
+
+
+getTopScores : String -> String -> Cmd Msg
+getTopScores token url =
+    Http.request
+        { method = "GET"
+        , body = Http.emptyBody
+        , url = url ++ "/scores?limit=10&offset=0&order=score.desc"
+        , headers =
+            [ Http.header "Authorization" ("Bearer" ++ token)
+            ]
+        , expect = Http.expectJson (RemoteData.fromResult >> GotTopScores) (list decodeScore)
+        , tracker = Nothing
+        , timeout = Nothing
+        }
