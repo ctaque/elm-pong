@@ -18,7 +18,7 @@ const Component = (props: {}) => {
     const flags = {
         windowWidth: window.innerWidth,
         windowHeight: window.innerHeight,
-        apiUrl: process.env.REACT_APP_API_URL,
+        apiUrl: process.env.REACT_APP_GOOD_API_URL,
         jwtToken: getToken()
     };
     return (
