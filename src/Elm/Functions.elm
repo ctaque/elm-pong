@@ -8,6 +8,7 @@ import Json.Decode exposing (Decoder, float, int, list, nullable, string)
 import Json.Decode.Pipeline exposing (hardcoded, optional, required)
 import Json.Encode
 import RemoteData
+import Table
 
 
 getBarMoveIncrement : Int -> Int
@@ -54,6 +55,7 @@ init flags =
       , jwtToken = flags.jwtToken
       , score = 100
       , topScores = RemoteData.NotAsked
+      , tableState = Table.initialSort "Score"
       }
     , Cmd.none
     )
@@ -128,6 +130,9 @@ decodeScore : Decoder Score
 decodeScore =
     Json.Decode.succeed Score
         |> required "id" int
+        |> required "pseudo" string
+        |> required "level" int
+        |> required "score" int
 
 
 sendScore : String -> String -> String -> Int -> Int -> Cmd Msg

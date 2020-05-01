@@ -82,10 +82,33 @@ button:disabled{
     align-items: center;
 }
 
-.play-again-wrapper .footer .level{
-    font-size: 2em;
+.play-again-wrapper .footer .level-score{
+    display: flex;
+    flex-direction: column;
+}
+
+.play-again-wrapper .footer .level-score .level,
+.play-again-wrapper .footer .level-score .score {
+    font-size: 1.5em;
     margin-right: 1em;
     color: rgb(250, 240, 198);
+}
+.scores {
+    width: 350px;
+    color: rgb(250, 240, 198);
+    margin-top: 1em;
+}
+.scores h2{
+    margin-bottom: 0.3em;
+}
+.scores table.scores-list{
+    width: 100%;
+    border: 1px solid rgb(150, 140, 100);
+    border-radius: 4px;
+}
+.scores table.scores-list tr td{
+    border-top: 1px dashed rgb(150, 140, 100);
+    text-align: center;
 }
 
 .play-again-wrapper .credit {

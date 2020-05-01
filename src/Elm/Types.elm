@@ -2,6 +2,7 @@ module Elm.Types exposing (..)
 
 import Keyboard exposing (RawKey)
 import RemoteData exposing (WebData)
+import Table
 import Time
 
 
@@ -20,6 +21,7 @@ type Msg
     | SetScore Time.Posix
     | GotScore (WebData (List Score))
     | GotTopScores (WebData (List Score))
+    | SetTableState Table.State
 
 
 type alias WindowSize =
@@ -62,6 +64,7 @@ type alias Model =
     , jwtToken : String
     , score : Int
     , topScores : WebData (List Score)
+    , tableState : Table.State
     }
 
 
@@ -75,4 +78,7 @@ type alias Flags =
 
 type alias Score =
     { id : Int
+    , pseudo : String
+    , level : Int
+    , score : Int
     }

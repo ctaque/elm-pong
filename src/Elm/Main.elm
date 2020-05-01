@@ -4,13 +4,14 @@ import Browser
 import Browser.Events as E
 import Elm.Constants exposing (barHeight, barYOffset, circleRadius)
 import Elm.Functions exposing (barOffsetFromLeft, barOffsetFromRight, getBarMoveIncrement, getBarMoveIncrementMobile, getBarWidth, getInitialBarXOffset, getTopScores, getXPosition, getYPosition, init, sendScore)
-import Elm.Types exposing (Direction(..), Model, Msg(..))
-import Html exposing (Html, a, button, div, h1, input, span, text)
+import Elm.Types exposing (Direction(..), Model, Msg(..), Score)
+import Html exposing (Html, a, button, div, h1, h2, input, span, text)
 import Html.Attributes exposing (attribute, class, href, style, target)
 import Html.Events exposing (onClick, onInput, onMouseUp)
 import Json.Decode exposing (Decoder, float, int, nullable, string)
-import JsonWebToken as JWT exposing (hmacSha256)
 import Keyboard exposing (rawValue)
+import RemoteData
+import Table exposing (defaultCustomizations)
 import Time
 
 
@@ -21,6 +22,11 @@ main =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        SetTableState newState ->
+            ( { model | tableState = newState }
+            , Cmd.none
+            )
+
         GotTopScores scores ->
             ( { model | topScores = scores }, Cmd.none )
 
@@ -185,6 +191,27 @@ update msg model =
             ( { model | pseudo = pseudo, pseudoErrors = pseudoErrors }, Cmd.none )
 
 
+config : Table.Config Score Msg
+config =
+    Table.customConfig
+        { toId = String.fromInt << .id
+        , toMsg = SetTableState
+        , columns =
+            [ Table.stringColumn "Username" .pseudo
+            , Table.intColumn "level" .level
+            , Table.intColumn "score" .score
+            ]
+        , customizations =
+            { defaultCustomizations | tableAttrs = toTableAttrs }
+        }
+
+
+toTableAttrs : List (Html.Attribute Msg)
+toTableAttrs =
+    [ attribute "class" "scores-list"
+    ]
+
+
 view : Model -> Html Msg
 view model =
     div
@@ -228,11 +255,29 @@ view model =
                 [ div [ class "play-again-wrapper" ]
                     [ h1 [] [ text "Game over" ]
                     , div [ class "footer" ]
-                        [ span [ class "level" ]
-                            [ text ("Your level : " ++ String.fromInt model.level) ]
+                        [ div [ class "level-score" ]
+                            [ span [ class "level" ]
+                                [ text ("Your level : " ++ String.fromInt model.level) ]
+                            , span [ class "score" ] [ text ("Your score : " ++ String.fromInt model.score) ]
+                            ]
                         , button
                             [ onClick Restart ]
                             [ text "Play again" ]
+                        ]
+                    , div [ class "scores" ]
+                        [ h2 [] [ text "Scores :" ]
+                        , case model.topScores of
+                            RemoteData.Loading ->
+                                span [] [ text "Chargement" ]
+
+                            RemoteData.NotAsked ->
+                                div [] []
+
+                            RemoteData.Success scores ->
+                                Table.view config model.tableState scores
+
+                            RemoteData.Failure err ->
+                                div [] [ text "Http Err" ]
                         ]
                     , span [ class "credit" ] [ a [ href "https://github.com/ctaque/elm-pong", target "_blank" ] [ text "A game by Cyprien Taque" ] ]
                     ]
