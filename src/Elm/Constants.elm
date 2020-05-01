@@ -28,4 +28,4 @@ barHeight =
 
 circleRadius : Int
 circleRadius =
-    50
+    25
