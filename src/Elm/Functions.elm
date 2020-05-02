@@ -54,6 +54,7 @@ init flags =
       , apiUrl = flags.apiUrl
       , jwtToken = flags.jwtToken
       , score = 100
+      , savedScore = Maybe.Nothing
       , topScores = RemoteData.NotAsked
       , tableState = Table.sortBy "score" False
       , filterScoreUsername = ""

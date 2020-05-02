@@ -39,8 +39,20 @@ update msg model =
         GotTopScores scores ->
             ( { model | topScores = scores }, Cmd.none )
 
-        GotScore _ ->
-            ( model, getTopScores model.jwtToken model.apiUrl "*" )
+        GotScore scoreList ->
+            case scoreList of
+                RemoteData.Success list ->
+                    let
+                        array =
+                            Array.fromList list
+
+                        mbScore =
+                            Array.get 0 array
+                    in
+                    ( { model | savedScore = mbScore }, getTopScores model.jwtToken model.apiUrl "*" )
+
+                _ ->
+                    ( model, Cmd.none )
 
         SetScore _ ->
             ( { model | score = model.score + 1 }, Cmd.none )
@@ -200,8 +212,8 @@ update msg model =
             ( { model | pseudo = pseudo, pseudoErrors = pseudoErrors }, Cmd.none )
 
 
-config : Table.Config Score Msg
-config =
+config : Model -> Table.Config Score Msg
+config model =
     Table.customConfig
         { toId = String.fromInt << .id
         , toMsg = SetTableState
@@ -211,13 +223,28 @@ config =
             , Table.intColumn "Score" .score
             ]
         , customizations =
-            { defaultCustomizations | tableAttrs = toTableAttrs }
+            { defaultCustomizations | tableAttrs = toTableAttrs, rowAttrs = toRowAttrs model }
         }
 
 
 toTableAttrs : List (Html.Attribute Msg)
 toTableAttrs =
     [ attribute "class" "scores-list"
+    ]
+
+
+toRowAttrs : Model -> Score -> List (Html.Attribute Msg)
+toRowAttrs model currentScore =
+    [ case model.savedScore of
+        Just myScore ->
+            if myScore.id == currentScore.id then
+                attribute "class" "highlight"
+
+            else
+                attribute "class" ""
+
+        Nothing ->
+            attribute "class" ""
     ]
 
 
@@ -304,7 +331,7 @@ view model =
                                 div [] []
 
                             RemoteData.Success scores ->
-                                Table.view config model.tableState scores
+                                Table.view (config model) model.tableState scores
 
                             RemoteData.Failure err ->
                                 div [] [ text "Http Err" ]

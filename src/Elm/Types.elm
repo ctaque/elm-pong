@@ -65,6 +65,7 @@ type alias Model =
     , apiUrl : String
     , jwtToken : String
     , score : Int
+    , savedScore : Maybe Score
     , topScores : WebData (List Score)
     , tableState : Table.State
     , filterScoreUsername : String
