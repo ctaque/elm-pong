@@ -9,8 +9,8 @@ import JWT from 'jsonwebtoken';
 const getToken = () => JWT.sign({
     "role": "web_anon",
     "exp": Math.round(
-        (new Date().getTime() + 60 * 1000 /* milliseconds */) / 1000
-        /* seconds */) // 1 min
+        (new Date().getTime() + 10 * 1000 /* milliseconds */) / 1000
+        /* seconds */) // 10 s
 }, process.env.REACT_APP_JWT_SECRET || '');
 
 const Component = (props: {}) => {
@@ -31,7 +31,7 @@ const Component = (props: {}) => {
 function setupPorts(ports: any) {
     window.setInterval(() => {
         ports.getJwt.send(getToken());
-    }, 10000);
+    }, 8000);
 }
 
 ReactDOM.render(
