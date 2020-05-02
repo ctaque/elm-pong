@@ -1,5 +1,7 @@
 module Elm.Constants exposing (..)
 
+import Array exposing (Array)
+
 
 pxByMove : Int
 pxByMove =
@@ -29,3 +31,14 @@ barHeight =
 circleRadius : Int
 circleRadius =
     25
+
+
+colors : Array String
+colors =
+    Array.fromList
+        [ "66, 62, 55"
+        , "89, 104, 105"
+        , "46, 31, 39"
+        , "129, 82, 63"
+        , "110, 103, 95"
+        ]

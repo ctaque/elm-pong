@@ -172,3 +172,24 @@ getTopScores token url username =
         , tracker = Nothing
         , timeout = Nothing
         }
+
+
+getColorIndex : Int -> Int
+getColorIndex level =
+    let
+        firstNumber =
+            String.slice 0 1 (String.fromInt level)
+
+        firstNumberInt =
+            String.toInt firstNumber
+    in
+    case firstNumberInt of
+        Just value ->
+            if value > 5 then
+                10 - value - 1
+
+            else
+                value - 1
+
+        Nothing ->
+            0

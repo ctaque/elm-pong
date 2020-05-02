@@ -1,9 +1,10 @@
 port module Elm.Main exposing (main)
 
+import Array exposing (Array)
 import Browser
 import Browser.Events as E
-import Elm.Constants exposing (barHeight, barYOffset, circleRadius)
-import Elm.Functions exposing (barOffsetFromLeft, barOffsetFromRight, getBarMoveIncrement, getBarMoveIncrementMobile, getBarWidth, getInitialBarXOffset, getTopScores, getXPosition, getYPosition, init, sendScore)
+import Elm.Constants exposing (barHeight, barYOffset, circleRadius, colors)
+import Elm.Functions exposing (barOffsetFromLeft, barOffsetFromRight, getBarMoveIncrement, getBarMoveIncrementMobile, getBarWidth, getColorIndex, getInitialBarXOffset, getTopScores, getXPosition, getYPosition, init, sendScore)
 import Elm.Types exposing (Direction(..), Model, Msg(..), Score)
 import Html exposing (Html, a, button, div, h1, h2, input, span, text)
 import Html.Attributes exposing (attribute, class, href, style, target)
@@ -222,8 +223,24 @@ toTableAttrs =
 
 view : Model -> Html Msg
 view model =
+    let
+        color =
+            Array.get (getColorIndex model.level) colors
+    in
     div
-        [ class "game-board" ]
+        [ class "game-board"
+        , case model.gameLost of
+            False ->
+                case color of
+                    Just value ->
+                        style "background-color" ("rgb(" ++ value ++ ")")
+
+                    Nothing ->
+                        style "background-color" "transparent"
+
+            True ->
+                style "background-color" "rgb(40, 40, 40)"
+        ]
         [ if model.gameStarted == False then
             div
                 [ class "centered-wrapper" ]
@@ -298,7 +315,8 @@ view model =
 
           else
             div
-                [ class "game-board--inner-wrapper" ]
+                [ class "game-board--inner-wrapper"
+                ]
                 [ span
                     [ class "level" ]
                     [ text ("Level " ++ String.fromInt model.level), text " | ", text ("Score " ++ String.fromInt model.score) ]
