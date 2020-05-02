@@ -301,7 +301,7 @@ view model =
                 [ class "game-board--inner-wrapper" ]
                 [ span
                     [ class "level" ]
-                    [ text ("Level " ++ String.fromInt model.level) ]
+                    [ text ("Level " ++ String.fromInt model.level), text " | ", text ("Score " ++ String.fromInt model.score) ]
                 , div
                     [ class "bar"
                     , style "bottom" (String.fromInt barYOffset ++ "px")
