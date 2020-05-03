@@ -85,4 +85,5 @@ type alias Score =
     , pseudo : String
     , level : Int
     , score : Int
+    , rank : Int
     }

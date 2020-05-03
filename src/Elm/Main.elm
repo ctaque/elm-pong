@@ -218,7 +218,8 @@ config model =
         { toId = String.fromInt << .id
         , toMsg = SetTableState
         , columns =
-            [ Table.stringColumn "Username" .pseudo
+            [ Table.intColumn "#" .rank
+            , Table.stringColumn "Username" .pseudo
             , Table.intColumn "Level" .level
             , Table.intColumn "Score" .score
             ]

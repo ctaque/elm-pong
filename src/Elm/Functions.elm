@@ -135,6 +135,7 @@ decodeScore =
         |> required "pseudo" string
         |> required "level" int
         |> required "score" int
+        |> optional "rank" int 0
 
 
 sendScore : String -> String -> String -> Int -> Int -> Cmd Msg
@@ -165,7 +166,7 @@ getTopScores token url username =
     Http.request
         { method = "GET"
         , body = Http.emptyBody
-        , url = url ++ "/scores?limit=10&offset=0&order=score.desc&pseudo=like.%25" ++ username ++ "%25"
+        , url = url ++ "/scores_with_rank?limit=10&offset=0&order=score.desc&pseudo=like.%25" ++ username ++ "%25"
         , headers =
             [ Http.header "Authorization" ("Bearer" ++ token)
             ]
