@@ -2,7 +2,7 @@ module Elm.Functions exposing (..)
 
 import Complex exposing (exp, fromReal, real)
 import Elm.Constants exposing (barHeight, barMoveIncrement, barMoveIncrementMobile, barYOffset, circleRadius, pxByMove)
-import Elm.Types exposing (Coordinates, Direction(..), Flags, Model, Msg(..), Score, SetYPositionReturnType, WindowSize)
+import Elm.Types exposing (Coordinates, Direction(..), Flags, Model, Msg(..), Score, SetYPositionReturnType, View(..), WindowSize)
 import Http
 import Json.Decode exposing (Decoder, float, int, list, nullable, string)
 import Json.Decode.Pipeline exposing (hardcoded, optional, required)
@@ -43,8 +43,6 @@ init flags =
       , xDirection = 1
       , yDirection = -1
       , barXOffset = getInitialBarXOffset windowSize
-      , gameLost = False
-      , gameStarted = False
       , level = 1
       , barWidth = getBarWidth windowSize
       , direction = None
@@ -58,6 +56,7 @@ init flags =
       , topScores = RemoteData.NotAsked
       , tableState = Table.sortBy "score" False
       , filterScoreUsername = ""
+      , view = Home
       }
     , Cmd.none
     )
@@ -99,23 +98,34 @@ getYPosition coordinates barXOffset barWidth windowSize direction level =
             getStep level
     in
     if Tuple.second coordinates <= circleRadius then
-        { y = Tuple.second coordinates + step, direction = 1, gameLost = False }
+        { y = Tuple.second coordinates + step, direction = 1, view = Game }
 
     else if Tuple.second coordinates >= windowSize.height - circleRadius then
-        { y = Tuple.second coordinates - step, direction = -1, gameLost = True }
+        { y = Tuple.second coordinates - step, direction = -1, view = Scores }
 
-    else if direction == 1 && Tuple.second coordinates >= (windowSize.height - barHeight - barYOffset - circleRadius) then
-        if Tuple.first coordinates >= barXOffset && Tuple.first coordinates <= barXOffset + barWidth then
-            { y = Tuple.second coordinates - step, direction = -1, gameLost = False }
+    else if
+        direction
+            == 1
+            && Tuple.second coordinates
+            >= (windowSize.height - barHeight - barYOffset - circleRadius)
+    then
+        if
+            Tuple.first coordinates
+                >= barXOffset
+                && Tuple.first coordinates
+                <= barXOffset
+                + barWidth
+        then
+            { y = Tuple.second coordinates - step, direction = -1, view = Game }
 
         else
-            { y = Tuple.second coordinates + step, direction = 1, gameLost = False }
+            { y = Tuple.second coordinates + step, direction = 1, view = Game }
 
     else if direction == 1 then
-        { y = Tuple.second coordinates + step, direction = 1, gameLost = False }
+        { y = Tuple.second coordinates + step, direction = 1, view = Game }
 
     else
-        { y = Tuple.second coordinates - step, direction = -1, gameLost = False }
+        { y = Tuple.second coordinates - step, direction = -1, view = Game }
 
 
 barOffsetFromLeft : Int -> Int

@@ -155,9 +155,9 @@ button:disabled{
 }
 
 .ball{
+    transition: background-color 4s linear;
     position: absolute;
     transform-origin: center;
-    background-color: rgb(251, 73, 52);
     border-radius: 100%;
 }
 

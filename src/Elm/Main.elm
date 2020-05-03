@@ -3,9 +3,9 @@ port module Elm.Main exposing (main)
 import Array exposing (Array)
 import Browser
 import Browser.Events as E
-import Elm.Constants exposing (barHeight, barYOffset, circleRadius, colors)
+import Elm.Constants exposing (ballColors, barHeight, barYOffset, circleRadius, colors)
 import Elm.Functions exposing (barOffsetFromLeft, barOffsetFromRight, getBarMoveIncrement, getBarMoveIncrementMobile, getBarWidth, getColorIndex, getInitialBarXOffset, getTopScores, getXPosition, getYPosition, init, sendScore)
-import Elm.Types exposing (Direction(..), Model, Msg(..), Score)
+import Elm.Types exposing (Direction(..), Model, Msg(..), Score, View(..))
 import Html exposing (Html, a, button, div, h1, h2, input, span, text)
 import Html.Attributes exposing (attribute, class, href, style, target)
 import Html.Events exposing (onClick, onInput, onMouseUp)
@@ -68,7 +68,7 @@ update msg model =
 
         Restart ->
             ( { model
-                | gameLost = False
+                | view = Game
                 , level = 1
                 , direction = None
                 , barXOffset = getInitialBarXOffset model.windowSize
@@ -81,7 +81,7 @@ update msg model =
 
         Start ->
             ( { model
-                | gameStarted = True
+                | view = Game
               }
             , Cmd.none
             )
@@ -95,25 +95,25 @@ update msg model =
                     getYPosition model.coordinates model.barXOffset model.barWidth model.windowSize model.yDirection model.level
 
                 nextDirection =
-                    case yPosition.gameLost of
-                        True ->
-                            None
-
-                        False ->
+                    case yPosition.view of
+                        Game ->
                             model.direction
+
+                        _ ->
+                            None
             in
             ( { model
                 | coordinates = ( Tuple.first xPosition, yPosition.y )
                 , xDirection = Tuple.second xPosition
                 , yDirection = yPosition.direction
-                , gameLost = yPosition.gameLost
+                , view = yPosition.view
                 , direction = nextDirection
               }
-            , case yPosition.gameLost of
-                True ->
+            , case yPosition.view of
+                Scores ->
                     sendScore model.jwtToken model.apiUrl model.pseudo model.level model.score
 
-                False ->
+                _ ->
                     Cmd.none
             )
 
@@ -257,8 +257,8 @@ view model =
     in
     div
         [ class "game-board"
-        , case model.gameLost of
-            False ->
+        , case model.view of
+            Game ->
                 case color of
                     Just value ->
                         style "background-color" ("rgb(" ++ value ++ ")")
@@ -266,104 +266,133 @@ view model =
                     Nothing ->
                         style "background-color" "transparent"
 
-            True ->
+            _ ->
                 style "background-color" "rgb(40, 40, 40)"
         ]
-        [ if model.gameStarted == False then
-            div
-                [ class "centered-wrapper" ]
-                [ h1 [] [ text "The Pong game" ]
-                , div [ class "form" ]
-                    [ div [ class "form-item" ]
-                        [ input [ onInput HandlePseudoChange, attribute "placeholder" "Pick a username" ] [ text model.pseudo ]
+        [ case model.view of
+            Home ->
+                div
+                    [ class "centered-wrapper" ]
+                    [ h1 [] [ text "The Pong game" ]
+                    , div [ class "form" ]
+                        [ div [ class "form-item" ]
+                            [ input [ onInput HandlePseudoChange, attribute "placeholder" "Pick a username" ] [ text model.pseudo ]
+                            , case model.pseudoErrors of
+                                Nothing ->
+                                    span [] []
+
+                                Just error ->
+                                    span [ class "error-tip" ] [ text error ]
+                            ]
+                        ]
+                    , div [ class "controls-wrapper" ]
+                        [ div [ class "control" ] [ span [ class "arrow" ] [ text "←" ], text "Left arrow" ]
+                        , div [ class "control" ] [ text " | " ]
+                        , div [ class "control" ] [ text "Right arrow", span [ class "arrow" ] [ text "→" ] ]
+                        ]
+                    , button
+                        [ class "play-btn"
+                        , onClick Start
                         , case model.pseudoErrors of
-                            Nothing ->
-                                span [] []
-
                             Just error ->
-                                span [ class "error-tip" ] [ text error ]
+                                attribute "disabled" "true"
+
+                            Nothing ->
+                                attribute "enabled" "true"
                         ]
+                        [ text "Play" ]
                     ]
-                , div [ class "controls-wrapper" ]
-                    [ div [ class "control" ] [ span [ class "arrow" ] [ text "←" ], text "Left arrow" ]
-                    , div [ class "control" ] [ text " | " ]
-                    , div [ class "control" ] [ text "Right arrow", span [ class "arrow" ] [ text "→" ] ]
-                    ]
-                , button
-                    [ class "play-btn"
-                    , onClick Start
-                    , case model.pseudoErrors of
-                        Just error ->
-                            attribute "disabled" "true"
 
-                        Nothing ->
-                            attribute "enabled" "true"
+            Game ->
+                let
+                    ballColor =
+                        Array.get (getColorIndex model.level) ballColors
+                in
+                div
+                    [ class "game-board--inner-wrapper"
                     ]
-                    [ text "Play" ]
-                ]
+                    [ span
+                        [ class "level" ]
+                        [ text
+                            ("Level "
+                                ++ String.fromInt model.level
+                            )
+                        , text " | "
+                        , text ("Score " ++ String.fromInt model.score)
+                        ]
+                    , div
+                        [ class "bar"
+                        , style "bottom" (String.fromInt barYOffset ++ "px")
+                        , style "transform" ("translateX(" ++ (String.fromInt model.barXOffset ++ "px)"))
+                        , style "height" (String.fromInt barHeight ++ "px")
+                        , style "width" (String.fromInt model.barWidth ++ "px")
+                        ]
+                        []
+                    , div
+                        [ class "ball"
+                        , style "transform"
+                            ("translateY("
+                                ++ String.fromInt (Tuple.second model.coordinates - circleRadius)
+                                ++ "px) translateX("
+                                ++ String.fromInt (Tuple.first model.coordinates - circleRadius)
+                                ++ "px)"
+                            )
+                        , style "width" (String.fromInt (circleRadius * 2) ++ "px")
+                        , style "height" (String.fromInt (circleRadius * 2) ++ "px")
+                        , case ballColor of
+                            Just bc ->
+                                style "background-color" ("rgb(" ++ bc ++ ")")
 
-          else if model.gameLost == True then
-            div
-                [ class "centered-wrapper" ]
-                [ div [ class "play-again-wrapper" ]
-                    [ h1 [] [ text "Game over" ]
-                    , div [ class "footer" ]
-                        [ div [ class "level-score" ]
-                            [ span [ class "level" ]
-                                [ text ("Your level : " ++ String.fromInt model.level) ]
-                            , span [ class "score" ] [ text ("Your score : " ++ String.fromInt model.score) ]
+                            Nothing ->
+                                style "background-color" "#e4e4e4"
+                        ]
+                        []
+                    ]
+
+            Scores ->
+                div
+                    [ class "centered-wrapper" ]
+                    [ div [ class "play-again-wrapper" ]
+                        [ h1 [] [ text "Game over" ]
+                        , div [ class "footer" ]
+                            [ div [ class "level-score" ]
+                                [ span [ class "level" ]
+                                    [ text ("Your level : " ++ String.fromInt model.level) ]
+                                , span [ class "score" ] [ text ("Your score : " ++ String.fromInt model.score) ]
+                                ]
+                            , button
+                                [ onClick Restart ]
+                                [ text "Play again" ]
                             ]
-                        , button
-                            [ onClick Restart ]
-                            [ text "Play again" ]
-                        ]
-                    , div [ class "scores" ]
-                        [ h2 [] [ text "Scores :" ]
-                        , input
-                            [ onInput FilterUsername
-                            , attribute "placeholder" "Filter username"
+                        , div [ class "scores" ]
+                            [ h2 [] [ text "Scores :" ]
+                            , input
+                                [ onInput FilterUsername
+                                , attribute "placeholder" "Filter username"
+                                ]
+                                []
+                            , case model.topScores of
+                                RemoteData.Loading ->
+                                    span [] [ text "Loading" ]
+
+                                RemoteData.NotAsked ->
+                                    div [] []
+
+                                RemoteData.Success scores ->
+                                    Table.view (config model) model.tableState scores
+
+                                RemoteData.Failure err ->
+                                    div [] [ text "Http Err" ]
                             ]
-                            []
-                        , case model.topScores of
-                            RemoteData.Loading ->
-                                span [] [ text "Loading" ]
-
-                            RemoteData.NotAsked ->
-                                div [] []
-
-                            RemoteData.Success scores ->
-                                Table.view (config model) model.tableState scores
-
-                            RemoteData.Failure err ->
-                                div [] [ text "Http Err" ]
+                        , span [ class "credit" ]
+                            [ a
+                                [ href "https://github.com/ctaque/elm-pong"
+                                , target "_blank"
+                                ]
+                                [ text "A game by Cyprien Taque" ]
+                            ]
                         ]
-                    , span [ class "credit" ] [ a [ href "https://github.com/ctaque/elm-pong", target "_blank" ] [ text "A game by Cyprien Taque" ] ]
                     ]
-                ]
-
-          else
-            div
-                [ class "game-board--inner-wrapper"
-                ]
-                [ span
-                    [ class "level" ]
-                    [ text ("Level " ++ String.fromInt model.level), text " | ", text ("Score " ++ String.fromInt model.score) ]
-                , div
-                    [ class "bar"
-                    , style "bottom" (String.fromInt barYOffset ++ "px")
-                    , style "transform" ("translateX(" ++ (String.fromInt model.barXOffset ++ "px)"))
-                    , style "height" (String.fromInt barHeight ++ "px")
-                    , style "width" (String.fromInt model.barWidth ++ "px")
-                    ]
-                    []
-                , div
-                    [ class "ball"
-                    , style "transform" ("translateY(" ++ String.fromInt (Tuple.second model.coordinates - circleRadius) ++ "px) translateX(" ++ String.fromInt (Tuple.first model.coordinates - circleRadius) ++ "px)")
-                    , style "width" (String.fromInt (circleRadius * 2) ++ "px")
-                    , style "height" (String.fromInt (circleRadius * 2) ++ "px")
-                    ]
-                    []
-                ]
         ]
 
 
@@ -376,7 +405,7 @@ port getJwt : (String -> msg) -> Sub msg
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    if model.gameLost || model.gameStarted == False then
+    if model.view /= Game then
         Sub.batch
             [ Keyboard.downs KeyDown
             , getJwt GotJwt
@@ -391,10 +420,10 @@ subscriptions model =
             , Keyboard.ups KeyUp
             , E.onResize (\w h -> GotWindowDimensions w h)
             , getJwt GotJwt
-            , case model.gameStarted of
-                True ->
+            , case model.view of
+                Game ->
                     Time.every 100 SetScore
 
-                False ->
+                _ ->
                     Sub.none
             ]

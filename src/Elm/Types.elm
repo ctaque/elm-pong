@@ -35,7 +35,7 @@ type alias WindowSize =
 type alias SetYPositionReturnType =
     { y : Int
     , direction : Int
-    , gameLost : Bool
+    , view : View
     }
 
 
@@ -49,6 +49,12 @@ type Direction
     | None
 
 
+type View
+    = Home
+    | Game
+    | Scores
+
+
 type alias Model =
     { coordinates : Coordinates
     , xDirection : Int
@@ -56,8 +62,6 @@ type alias Model =
     , windowSize : WindowSize
     , barWidth : Int
     , barXOffset : Int
-    , gameLost : Bool
-    , gameStarted : Bool
     , level : Int
     , direction : Direction
     , pseudo : String
@@ -69,6 +73,7 @@ type alias Model =
     , topScores : WebData (List Score)
     , tableState : Table.State
     , filterScoreUsername : String
+    , view : View
     }
 
 
