@@ -13,7 +13,7 @@ import Table
 
 getBarMoveIncrement : Int -> Int
 getBarMoveIncrement level =
-    barMoveIncrement + level
+    barMoveIncrement + Basics.floor (Basics.toFloat level / 3)
 
 
 getBarMoveIncrementMobile : Int -> Int
