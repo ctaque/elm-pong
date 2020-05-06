@@ -7,3 +7,9 @@ npm i
 
 npm start
 ```
+
+To save The scores, you need to install and configure a PostGrest webserver and create a .env file at project root containing these environment variables :
+```
+REACT_APP_GOOD_API_URL=http://localhost:5433
+REACT_APP_JWT_SECRET=any_secret
+```
